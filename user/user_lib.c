@@ -13,12 +13,12 @@
 int do_user_call(uint64 sysnum, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint64 a5, uint64 a6,
                  uint64 a7) {
   int ret;
-
+  //sysnum 为调用的函数类型 是printu还是exit
   // before invoking the syscall, arguments of do_user_call are already loaded into the argument
   // registers (a0-a7) of our (emulated) risc-v machine.
   asm volatile(
       "ecall\n"
-      "sw a0, %0"  // returns a 32-bit value
+      "sw a0, %0"  // returns a 32-bit value 将功能号压栈
       : "=m"(ret)
       :
       : "memory");
@@ -31,16 +31,16 @@ int do_user_call(uint64 sysnum, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint
 //
 int printu(const char* s, ...) {
   va_list vl;
-  va_start(vl, s);
+  va_start(vl, s);//vl指向第一个可变参数
 
   char out[256];  // fixed buffer size.
-  int res = vsnprintf(out, sizeof(out), s, vl);
+  int res = vsnprintf(out, sizeof(out), s, vl);//字符个数
   va_end(vl);
   const char* buf = out;
-  size_t n = res < sizeof(out) ? res : sizeof(out);
+  size_t n = res < sizeof(out) ? res : sizeof(out);//字符个数
 
   // make a syscall to implement the required functionality.
-  return do_user_call(SYS_user_print, (uint64)buf, n, 0, 0, 0, 0, 0);
+  return do_user_call(SYS_user_print, (uint64)buf, n, 0, 0, 0, 0, 0);//功能号 字符串首地址 字符串个数
 }
 
 //
