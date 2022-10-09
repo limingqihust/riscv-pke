@@ -10,7 +10,7 @@
 int main(void) {
   printu("Hello world!\n");
   int i;
-  for (i = 0; i < 100000000; ++i) {
+  for (i = 0; i<100000000; ++i) {
     if (i % 5000000 == 0) printu("wait %d\n", i);
   }
 
