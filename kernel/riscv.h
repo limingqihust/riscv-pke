@@ -39,7 +39,7 @@
 // exceptions
 #define CAUSE_MISALIGNED_FETCH 0x0     // Instruction address misaligned
 #define CAUSE_FETCH_ACCESS 0x1         // Instruction access fault
-#define CAUSE_ILLEGAL_INSTRUCTION 0x2  // Illegal Instruction
+#define CAUSE_ILLEGAL_INSTRUCTION 0x2  // Illegal Instruction 非法指令异常
 #define CAUSE_BREAKPOINT 0x3           // Breakpoint
 #define CAUSE_MISALIGNED_LOAD 0x4      // Load address misaligned
 #define CAUSE_LOAD_ACCESS 0x5          // Load access fault
