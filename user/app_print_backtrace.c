@@ -6,6 +6,12 @@
 #include "user_lib.h"
 #include "util/types.h"
 
+/*
+输出依次调用的函数 回溯层数为x
+输出x行 每一行为调用的函数符号名
+到main函数为止
+*/
+
 void f8() { print_backtrace(7); }
 void f7() { f8(); }
 void f6() { f7(); }
@@ -20,4 +26,5 @@ int main(void) {
   f1();
   exit(0);
   return 0;
+
 }
