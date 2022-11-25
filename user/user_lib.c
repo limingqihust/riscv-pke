@@ -9,7 +9,6 @@
 #include "util/types.h"
 #include "util/snprintf.h"
 #include "kernel/syscall.h"
-
 int do_user_call(uint64 sysnum, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint64 a5, uint64 a6,
                  uint64 a7) {
   int ret;
@@ -56,24 +55,9 @@ int exit(int code) {
 }
 
 
-void print_backtrace(int backtrace_num)
+int print_backtrace(int backtrace_num)
 {
-  printu("print_backtrace begin\n");
-
-  // for(int i=0;i<backtrace_num;i++)
-  // {
-  //     int ret;
-  //     asm volatile(
-  //       "ecall\n"
-  //       "sw a0, %0"  
-  //       : "=m"(ret)
-  //       :
-  //       : "memory");
-
-
-  // }
-  //return do_user_call(SYS_user_print_backtrace, backtrace_num, 0, 0, 0, 0, 0, 0); 
-  printu("print_backtrace end\n");
-
-
+  //将print_backtrace转换为系统调用
+  //功能号 要打印的调用栈的层数
+  return do_user_call(SYS_user_print_backtrace, backtrace_num, 0, 0, 0, 0, 0, 0); 
 }

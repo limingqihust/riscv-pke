@@ -24,15 +24,15 @@ smode_trap_vector:
 
     # store_all_registers is a macro defined in util/load_store.S, it stores contents
     # of all general purpose registers into a piece of memory started from [t6].
-    store_all_registers
+    store_all_registers # 保护现场
 
     # come back to save a0 register before entering trap handling in trapframe
-    # [t0]=[sscratch]
-    csrr t0, sscratch
+    # [t0]=[sscratch] 
+    csrr t0, sscratch # 将a0中的系统调用号保存到内核堆栈???
     sd t0, 72(a0)
 
     # use the "user kernel" stack (whose pointer stored in p->trapframe->kernel_sp)
-    ld sp, 248(a0)
+    ld sp, 248(a0) # 将S模式栈切换为U模式栈
 
     # load the address of smode_trap_handler() from p->trapframe->kernel_trap
     ld t0, 256(a0)

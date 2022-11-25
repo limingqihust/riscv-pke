@@ -4,4 +4,4 @@
 
 int printu(const char *s, ...);
 int exit(int code);
-void print_backtrace(int backtrace_num);
+int print_backtrace(int backtrace_num);

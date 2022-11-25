@@ -38,7 +38,7 @@ static uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {
 elf_status elf_init(elf_ctx *ctx, void *info) {
   ctx->info = info;
 
-  // load the elf header
+  // load the elf header 将info中的数据(elf中的数据)拷贝到ctx->ehdr
   if (elf_fpread(ctx, &ctx->ehdr, sizeof(ctx->ehdr), 0) != sizeof(ctx->ehdr)) return EL_EIO;
 
   // check the signature (magic value) of the elf

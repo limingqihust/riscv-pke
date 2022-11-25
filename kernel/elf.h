@@ -15,14 +15,14 @@ typedef struct elf_header_t {
   uint32 version;   /* Object file version */
   uint64 entry;     /* Entry point virtual address */
   uint64 phoff;     /* Program header table file offset */
-  uint64 shoff;     /* Section header table file offset 第一个Section header的位置*/
+  uint64 shoff;     /* 第一个Section header的位置 Section header table file offset */
   uint32 flags;     /* Processor-specific flags */
-  uint16 ehsize;    /* ELF header size in bytes */
+  uint16 ehsize;    /* 一个Section header的大小 ELF header size in bytes */
   uint16 phentsize; /* Program header table entry size */
   uint16 phnum;     /* Program header table entry count */
   uint16 shentsize; /* Section header table entry size */
-  uint16 shnum;     /* Section header table entry count      Section header的数量*/
-  uint16 shstrndx;  /* Section header string table index   Section header的索引值*/
+  uint16 shnum;     /* Section header的数量 Section header table entry count */
+  uint16 shstrndx;  /* Section header的索引值??? Section header string table index */
 } elf_header;
 
 // Program segment header.
