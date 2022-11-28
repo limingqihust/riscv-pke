@@ -22,8 +22,7 @@ void f2() { f3(); }
 void f1() { f2(); }
 
 int main(void) {
-//   printu("back trace the user app in the following:\n");
-  f1();
+  printu("back trace the user app in the following:\n");
   exit(0);
   return 0;
 

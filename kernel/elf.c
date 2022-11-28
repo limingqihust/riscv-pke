@@ -8,15 +8,12 @@
 #include "riscv.h"
 #include "spike_interface/spike_utils.h"
 
-typedef struct elf_info_t {
-  spike_file_t *f;
-  process *p;
-} elf_info;
+
 
 //
 // the implementation of allocater. allocates memory space for later segment loading
 //
-static void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size) {
+void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size) {
   // directly returns the virtual address as we are in the Bare mode in lab1_x
   return (void *)elf_va;
 }
@@ -24,7 +21,7 @@ static void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 siz
 //
 // actual file reading, using the spike file interface.
 //
-static uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {
+uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {
   elf_info *msg = (elf_info *)ctx->info;
   // call spike file utility to load the content of elf file into memory.
   // spike_file_pread will read the elf file (msg->f) from offset to memory (indicated by
@@ -74,17 +71,17 @@ elf_status elf_load(elf_ctx *ctx) {
 
   return EL_OK;
 }
+// typedef union {
+//   uint64 buf[MAX_CMDLINE_ARGS];
+//   char *argv[MAX_CMDLINE_ARGS];
+// } arg_buf;
 
-typedef union {
-  uint64 buf[MAX_CMDLINE_ARGS];
-  char *argv[MAX_CMDLINE_ARGS];
-} arg_buf;
 
 //
 // returns the number (should be 1) of string(s) after PKE kernel in command line.
 // and store the string(s) in arg_bug_msg.
 //
-static size_t parse_args(arg_buf *arg_bug_msg) {
+size_t parse_args(arg_buf *arg_bug_msg) {
   // HTIFSYS_getmainvars frontend call reads command arguments to (input) *arg_bug_msg
   long r = frontend_syscall(HTIFSYS_getmainvars, (uint64)arg_bug_msg,
       sizeof(*arg_bug_msg), 0, 0, 0, 0, 0);
@@ -106,7 +103,6 @@ static size_t parse_args(arg_buf *arg_bug_msg) {
 //
 void load_bincode_from_host_elf(process *p) {
   arg_buf arg_bug_msg;
-
   // retrieve command line arguements
   size_t argc = parse_args(&arg_bug_msg);
   if (!argc) panic("You need to specify the application program!\n");
@@ -122,7 +118,7 @@ void load_bincode_from_host_elf(process *p) {
   info.p = p;
   // IS_ERR_VALUE is a macro defined in spike_interface/spike_htif.h
   if (IS_ERR_VALUE(info.f)) panic("Fail on openning the input application program.\n");
-
+  
   // init elfloader context. elf_init() is defined above.
   if (elf_init(&elfloader, &info) != EL_OK)
     panic("fail to init elfloader.\n");

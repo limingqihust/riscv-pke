@@ -3,9 +3,16 @@
 
 #include "util/types.h"
 #include "process.h"
-
+#include "spike_interface/spike_utils.h"
 #define MAX_CMDLINE_ARGS 64
-
+typedef union {
+  uint64 buf[MAX_CMDLINE_ARGS];
+  char *argv[MAX_CMDLINE_ARGS];
+} arg_buf;
+typedef struct elf_info_t {
+  spike_file_t *f;
+  process *p;
+} elf_info;
 // elf header structure
 typedef struct elf_header_t {
   uint32 magic;
@@ -17,10 +24,10 @@ typedef struct elf_header_t {
   uint64 phoff;     /* Program header table file offset */
   uint64 shoff;     /* 第一个Section header的位置 Section header table file offset */
   uint32 flags;     /* Processor-specific flags */
-  uint16 ehsize;    /* 一个Section header的大小 ELF header size in bytes */
+  uint16 ehsize;    /* ELF header size in bytes */
   uint16 phentsize; /* Program header table entry size */
   uint16 phnum;     /* Program header table entry count */
-  uint16 shentsize; /* Section header table entry size */
+  uint16 shentsize; /* 一个Section header的大小Section header table entry size */
   uint16 shnum;     /* Section header的数量 Section header table entry count */
   uint16 shstrndx;  /* Section header的索引值??? Section header string table index */
 } elf_header;
@@ -36,6 +43,20 @@ typedef struct elf_prog_header_t {
   uint64 memsz;  /* Segment size in memory */
   uint64 align;  /* Segment alignment */
 } elf_prog_header;
+
+typedef struct elf_section_header_t
+{
+  uint32 sh_name;       /*section名称 为字符串在shstrtab中的偏移量*/
+  uint32 sh_type;
+  uint64 sh_flags;
+  uint64 sh_addr;       /*section virtual address*/
+  uint64 sh_offset;     /*section 在文件内的偏移*/
+  uint64 sh_size;       /*该section的大小*/ 
+  uint32 sh_link;
+  uint32 sh_info;
+  uint64 sh_addraligh;
+  uint64 sh_entsize;
+}elf_section_header;
 
 #define ELF_MAGIC 0x464C457FU  // "\x7FELF" in little endian
 #define ELF_PROG_LOAD 1
@@ -54,10 +75,11 @@ typedef struct elf_ctx_t {
   void *info;
   elf_header ehdr;
 } elf_ctx;
-
+size_t parse_args(arg_buf *arg_bug_msg);
 elf_status elf_init(elf_ctx *ctx, void *info);
 elf_status elf_load(elf_ctx *ctx);
+uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset);
+void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size);
 
 void load_bincode_from_host_elf(process *p);
-
 #endif
