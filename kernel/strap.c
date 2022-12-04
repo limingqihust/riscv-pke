@@ -58,9 +58,14 @@ stval:the virtual address which is accessed when exception happens
 */
 void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
   sprint("handle_page_fault: %llx\n",stval);
-  // if(stval>=USER_FREE_ADDRESS_START && stval<USER_STACK_TOP)
-  //     panic("this address is not available!");
+
   void* pa;
+  // sprint("stval=%llx\n",stval);
+  // sprint("USER_STACK_TOP-32*STACK_SIZE=%llx\n",USER_STACK_TOP-32*STACK_SIZE);
+  if(stval<USER_STACK_TOP-32*STACK_SIZE)
+    panic("this address is not available!");
+  // uint64 physical_address=lookup_pa((pagetable_t)current->pagetable,sepc);
+  // sprint("physical_address=%llx\n",physical_address);
   switch (mcause) {
     case CAUSE_STORE_PAGE_FAULT:
       // TODO (lab2_3): implement the operations that solve the page fault to
