@@ -44,6 +44,7 @@ ssize_t sys_user_exit(uint64 code) {
 //
 uint64 sys_user_allocate_page() {
   void* pa = alloc_page();
+  /*alloc a page of 4kb to va*/
   uint64 va = g_ufree_page;
   g_ufree_page += PGSIZE;
   user_vm_map((pagetable_t)current->pagetable, va, PGSIZE, (uint64)pa,
