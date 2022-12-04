@@ -44,6 +44,7 @@ ssize_t sys_user_exit(uint64 code) {
 //
 uint64 sys_user_allocate_page() {
   void* pa = alloc_page();
+  /*alloc a page of 4kb to va*/
   uint64 va = g_ufree_page;
   g_ufree_page += PGSIZE;
   user_vm_map((pagetable_t)current->pagetable, va, PGSIZE, (uint64)pa,
@@ -76,7 +77,18 @@ ssize_t sys_user_yield() {
   // hint: the functionality of yield is to give up the processor. therefore,
   // we should set the status of currently running process to READY, insert it in
   // the rear of ready queue, and finally, schedule a READY process to run.
-  panic( "You need to implement the yield syscall in lab3_2.\n" );
+
+  // sprint("current->pid=%d\n",current->pid);
+  // sprint("current->queue_next->pid=%d\n",current->queue_next->pid);
+
+
+
+  /*set the status of currently running process to READY*/
+  current->status=READY;
+  /*insert current process in the rear of ready queue*/
+  insert_to_ready_queue(current);
+  /*schedule a READY process to run*/
+  schedule();
 
   return 0;
 }
