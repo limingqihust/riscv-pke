@@ -28,7 +28,7 @@ static void handle_syscall(trapframe *tf) {
   // problems in later experiments!
   // panic( "call do_syscall to accomplish the syscall and lab1_1 here.\n" );
   //怎么处理返回值
-  tf->kernel_trap=do_syscall(tf->regs.a0,tf->regs.a1,tf->regs.a2,tf->regs.a3,tf->regs.a4,tf->regs.a5,tf->regs.s6,tf->regs.a7);
+  tf->regs.a0=do_syscall(tf->regs.a0,tf->regs.a1,tf->regs.a2,tf->regs.a3,tf->regs.a4,tf->regs.a5,tf->regs.s6,tf->regs.a7);
 
 
 }
@@ -55,16 +55,27 @@ void handle_mtimer_trap() {
 // sepc: the pc when fault happens;
 // stval: the virtual address that causes pagefault when being accessed.
 //
+/*
+stval:the virtual address which is accessed when exception happens
+*/
 void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
-  sprint("handle_page_fault: %lx\n", stval);
+  sprint("handle_page_fault: %llx\n",stval);
+  void* pa;
   switch (mcause) {
     case CAUSE_STORE_PAGE_FAULT:
       // TODO (lab2_3): implement the operations that solve the page fault to
       // dynamically increase application stack.
       // hint: first allocate a new physical page, and then, maps the new page to the
       // virtual address that causes the page fault.
-      panic( "You need to implement the operations that actually handle the page fault in lab2_3.\n" );
 
+
+      /*allocate a new physical page */
+      pa = alloc_page();
+      if(pa==NULL)
+        panic("alloc page fail\n");
+      /*map the new physical page to virtual address that cause the page fault*/
+      if(map_pages((pagetable_t)current->pagetable,stval,1,(uint64)pa,prot_to_type(PROT_WRITE | PROT_READ, 1))==-1)
+        panic("handle_user_page_fault fail when map pa to va");
       break;
     default:
       sprint("unknown page fault.\n");
