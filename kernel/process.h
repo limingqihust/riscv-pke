@@ -71,6 +71,7 @@ typedef struct process_t {
 
   // accounting. added @lab3_3
   int tick_count;
+  int wait_flag;
 }process;
 
 // switch to run user app
@@ -95,7 +96,6 @@ int do_fork(process* parent);
 
 // current running process
 extern process* current;
-
 // address of the first free page in our simple heap. added @lab2_2
 extern uint64 g_ufree_page;
 

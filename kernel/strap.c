@@ -27,7 +27,6 @@ static void handle_syscall(trapframe *tf) {
   // IMPORTANT: return value should be returned to user app, or else, you will encounter
   // problems in later experiments!
   // panic( "call do_syscall to accomplish the syscall and lab1_1 here.\n" );
-  //怎么处理返回值
   tf->regs.a0=do_syscall(tf->regs.a0,tf->regs.a1,tf->regs.a2,tf->regs.a3,tf->regs.a4,tf->regs.a5,tf->regs.s6,tf->regs.a7);
 
 
@@ -59,7 +58,7 @@ void handle_mtimer_trap() {
 stval:the virtual address which is accessed when exception happens
 */
 void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
-  sprint("handle_page_fault: %llx\n",stval);
+  // sprint("handle_page_fault: %llx\n",stval);
   void* pa;
   switch (mcause) {
     case CAUSE_STORE_PAGE_FAULT:

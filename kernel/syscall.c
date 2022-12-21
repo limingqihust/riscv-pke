@@ -13,7 +13,6 @@
 #include "pmm.h"
 #include "vmm.h"
 #include "sched.h"
-
 #include "spike_interface/spike_utils.h"
 
 //
@@ -92,6 +91,16 @@ ssize_t sys_user_yield() {
 
   return 0;
 }
+extern process procs[NPROC];
+ssize_t sys_user_wait(int pid)
+{
+  current->status=BLOCKED;
+  /*等待任意一个子进程结束*/
+  current->wait_flag=pid;
+  schedule();
+  return -1;
+}
+
 
 //
 // [a0]: the syscall number; [a1] ... [a7]: arguments to the syscalls.
@@ -112,6 +121,8 @@ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, l
       return sys_user_fork();
     case SYS_user_yield:
       return sys_user_yield();
+    case SYS_user_wait:
+      return sys_user_wait(a1);
     default:
       panic("Unknown syscall %ld \n", a0);
   }
