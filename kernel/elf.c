@@ -21,6 +21,11 @@ void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size) {
 //
 // actual file reading, using the spike file interface.
 //
+/*
+dest:拷贝目的地
+nb:拷贝的字节数
+offset:拷贝的起始地址
+*/
 uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {
   elf_info *msg = (elf_info *)ctx->info;
   // call spike file utility to load the content of elf file into memory.

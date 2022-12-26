@@ -27,9 +27,9 @@ typedef struct elf_header_t {
   uint16 ehsize;    /* ELF header size in bytes */
   uint16 phentsize; /* Program header table entry size */
   uint16 phnum;     /* Program header table entry count */
-  uint16 shentsize; /* 一个Section header的大小Section header table entry size */
-  uint16 shnum;     /* Section header的数量 Section header table entry count */
-  uint16 shstrndx;  /* Section header的索引值??? Section header string table index */
+  uint16 shentsize; /* Section header table entry size */
+  uint16 shnum;     /* Section header table entry count */
+  uint16 shstrndx;  /* Section header string table index */
 } elf_header;
 
 // Program segment header.
@@ -56,7 +56,19 @@ typedef struct elf_section_header_t
   uint32 sh_info;
   uint64 sh_addraligh;
   uint64 sh_entsize;
-}elf_section_header;
+}elf_sect_header;
+
+typedef struct 
+{
+  uint32 st_name;
+  uint8 st_info;
+  uint8 st_other;
+  uint16 st_shndx;
+  uint64 st_value;
+  uint64 st_size;
+} Elf64_Sym;
+
+
 
 #define ELF_MAGIC 0x464C457FU  // "\x7FELF" in little endian
 #define ELF_PROG_LOAD 1
