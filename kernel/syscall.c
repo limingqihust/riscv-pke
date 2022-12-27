@@ -117,13 +117,11 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
 
 
 
-  ra=tf->regs.ra;
   sp=tf->regs.sp;
-  s0=tf->regs.s0;
-  sprint("ra=%llx sp=%llx s0=%llx\n",ra,sp,s0);
   ra=*(uint64*)(sp+8);//函数的返回地址
-  s0=*(uint64*)(sp);//
-  sp+=32;
+  s0=*(uint64*)(sp);//函数保存的栈顶指针
+  sp+=16;
+  sprint("ra=%llx\n",ra);
   for(int i=0;i<backtrace_num;i++)
   {
     ra=*(uint64*)(sp+8);
