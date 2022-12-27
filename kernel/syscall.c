@@ -86,6 +86,21 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
   if(elf_fpread(&elfloader,(void*)&symbol,section_header[idx_symtab].sh_size,section_header[idx_symtab].sh_offset)!=section_header[idx_symtab].sh_size)
     panic("load section symtab fail");
 
+
+  Elf64_Sym temp;
+  for (int i=0;i<num_symbol;i++) 
+  {
+    for(int j=0;j<num_symbol-i-1;j++) 
+    {
+      if(symbol[j].st_value>symbol[j+1].st_value)
+      {
+        temp=symbol[j];
+        symbol[j]=symbol[j+1];
+        symbol[j+1]=temp;
+      }
+    }
+  }
+
   /*读取strtab*/
   char strtab[section_header[idx_strtab].sh_size];
   if(elf_fpread(&elfloader,(void*)&strtab,section_header[idx_strtab].sh_size,section_header[idx_strtab].sh_offset)!=section_header[idx_strtab].sh_size)
@@ -95,39 +110,32 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
   uint64 ra=tf->regs.ra;
   uint64 sp=tf->regs.sp;
   uint64 s0=tf->regs.s0;
+  uint64 nxt_sp;
+  s0=*(uint64*)(sp+24);
   sp+=32;
+  nxt_sp=s0;
+  ra=*(uint64*)(sp+8);//函数的返回地址
+  s0=*(uint64*)(sp);//函数保存的栈顶指针
+  // sp+=16;
+  sp=nxt_sp;
+  /*print_backtrace->f8*/
   for(int i=0;i<backtrace_num;i++)
-  {
-    ra=*(uint64*)(sp+8);
-    s0=*(uint64*)(sp);
-    sp+=16;
-    uint64 func_addr;
-    if(i==0)
-      func_addr=ra-0xe;
-    else func_addr=ra-0xc;
+  {     
+    if(ra==0)
+      break;
     for(int j=0;j<num_symbol;j++)
     {
-      if(symbol[j].st_value==func_addr && symbol[j].st_info==STT_FUNC)
+      if(symbol[num_symbol-j-1].st_value<ra)
       {
-        sprint("%s\n",strtab+symbol[j].st_name);
+        sprint("%s\n",strtab+symbol[num_symbol-j-1].st_name);
         break;
       }
     }
-  }
-
-
-
-  sp=tf->regs.sp;
-  ra=*(uint64*)(sp+8);//函数的返回地址
-  s0=*(uint64*)(sp);//函数保存的栈顶指针
-  sp+=16;
-  sprint("ra=%llx\n",ra);
-  for(int i=0;i<backtrace_num;i++)
-  {
+    nxt_sp=s0;
     ra=*(uint64*)(sp+8);
     s0=*(uint64*)(sp);
-    sp+=16;
-    sprint("func_addr=%llx\n",ra);
+    // sp+=16;
+    sp=nxt_sp;
   }
 
 
