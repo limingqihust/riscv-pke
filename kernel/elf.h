@@ -58,6 +58,11 @@ typedef struct elf_section_header_t
   uint64 sh_entsize;
 }elf_sect_header;
 
+
+#define STT_NOTYPE 0
+#define STT_SECTION 3
+#define STT_FILE 4
+#define STT_FUNC 18
 typedef struct 
 {
   uint32 st_name;
