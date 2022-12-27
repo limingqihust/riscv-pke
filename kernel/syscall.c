@@ -35,13 +35,11 @@ ssize_t sys_user_exit(uint64 code) {
 ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
   elf_ctx elfloader;
   elf_info info;
-  info.f = spike_file_open("./obj/app_print_backtrace", O_RDONLY, 0);
+  info.f = spike_file_open("obj/app_print_backtrace", O_RDONLY, 0);
   // info.p = current;
   /*读取elf header到elfloader.ehdr中*/
   if(elf_init(&elfloader, &info)!=EL_OK)
     panic("elf init error\n");
-
-  
   elf_sect_header sh_addr;
   int i;
   int off;/*当前读取的section header的地址*/
