@@ -57,7 +57,5 @@ int exit(int code) {
 
 int print_backtrace(int backtrace_num)
 {
-  //将print_backtrace转换为系统调用
-  //功能号 要打印的调用栈的层数
   return do_user_call(SYS_user_print_backtrace, backtrace_num, 0, 0, 0, 0, 0, 0); 
 }

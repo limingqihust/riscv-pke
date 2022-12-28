@@ -12,7 +12,7 @@
 µ½mainº¯ÊýÎªÖ¹
 */
 
-void f8() { print_backtrace(10); }
+void f8() { print_backtrace(100); }
 void f7() { f8(); }
 void f6() { f7(); }
 void f5() { f6(); }

@@ -36,6 +36,7 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
   elf_ctx elfloader;
   elf_info info;
   info.f = spike_file_open("obj/app_print_backtrace", O_RDONLY, 0);
+  
   /*读取elf header到elfloader.ehdr中*/
   if(elf_init(&elfloader, &info)!=EL_OK)
     panic("elf init error\n");
@@ -48,20 +49,11 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
       panic("load section header into elfloader fail\n");
   }
 
-  uint64 num_section_header=(uint64)elfloader.ehdr.shnum;//section header的数量
-  uint64 first_section_header_off=(uint64)elfloader.ehdr.shoff;//第1个section header的地址
-  uint64 size_section_header=(uint64)elfloader.ehdr.shentsize;//section header的大小
+
   uint64 shstrndx=elfloader.ehdr.shstrndx;//shstrndx的索引值
-
-  /*section header shstrtab的地址*/
-  uint64 section_header_shstrtab_address=first_section_header_off+shstrndx*size_section_header;
-  elf_sect_header shstrtab_header;
-
   /*读取shstrtab*/
-  if(elf_fpread(&elfloader,(void*)&shstrtab_header,sizeof(shstrtab_header),section_header_shstrtab_address)!=sizeof(shstrtab_header))
-    panic("load section header fail");
-  char shstrtab[shstrtab_header.sh_size];
-  if(elf_fpread(&elfloader,(void*)&shstrtab,shstrtab_header.sh_size,shstrtab_header.sh_offset)!=shstrtab_header.sh_size)
+  char shstrtab[section_header[shstrndx].sh_size];
+   if(elf_fpread(&elfloader,(void*)&shstrtab,section_header[shstrndx].sh_size,section_header[shstrndx].sh_offset)!=section_header[shstrndx].sh_size)
     panic("load section shstrtab fail");
   int idx_symtab=0,idx_strtab=0;
   for(int i=0;i<elfloader.ehdr.shnum;i++)
@@ -110,17 +102,15 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
   uint64 ra=tf->regs.ra;
   uint64 sp=tf->regs.sp;
   uint64 s0=tf->regs.s0;
-  uint64 nxt_sp;
+  uint64 nxt_sp=s0;
   s0=*(uint64*)(sp+24);
-  sp+=32;
-  nxt_sp=s0;
-  ra=*(uint64*)(sp+8);//函数的返回地址
-  s0=*(uint64*)(sp);//函数保存的栈顶指针
-  // sp+=16;
   sp=nxt_sp;
-  /*print_backtrace->f8*/
   for(int i=0;i<backtrace_num;i++)
   {     
+    nxt_sp=s0;
+    ra=*(uint64*)(sp+8);
+    s0=*(uint64*)(sp);
+    sp=nxt_sp;
     if(ra==0)
       break;
     for(int j=0;j<num_symbol;j++)
@@ -131,12 +121,8 @@ ssize_t sys_user_print_backtrace(trapframe* tf,int backtrace_num) {
         break;
       }
     }
-    nxt_sp=s0;
-    ra=*(uint64*)(sp+8);
-    s0=*(uint64*)(sp);
-    // sp+=16;
-    sp=nxt_sp;
   }
+
 
 
   return 0;

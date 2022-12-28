@@ -46,12 +46,12 @@ typedef struct elf_prog_header_t {
 
 typedef struct elf_section_header_t
 {
-  uint32 sh_name;       /*section名称 为字符串在shstrtab中的偏移量*/
+  uint32 sh_name;     
   uint32 sh_type;
   uint64 sh_flags;
-  uint64 sh_addr;       /*section virtual address*/
-  uint64 sh_offset;     /*section 在文件内的偏移*/
-  uint64 sh_size;       /*该section的大小*/ 
+  uint64 sh_addr;      
+  uint64 sh_offset;    
+  uint64 sh_size;     
   uint32 sh_link;
   uint32 sh_info;
   uint64 sh_addraligh;
