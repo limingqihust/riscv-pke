@@ -185,7 +185,7 @@ int do_fork( process* parent)
   for( int i=0; i<parent->total_mapped_region; i++ ){
     // browse parent's vm space, and copy its trapframe and data segments,
     // map its code segment.
-    uint64 parent_va,parent_pa,child_va;
+    uint64 parent_va,parent_pa,child_va,child_pa;
     switch( parent->mapped_info[i].seg_type ){
       case CONTEXT_SEGMENT:
         *child->trapframe = *parent->trapframe;
@@ -205,19 +205,46 @@ int do_fork( process* parent)
         // segment of parent process.
         // DO NOT COPY THE PHYSICAL PAGES, JUST MAP THEM.
 
-        /*fetch the virtual address of parent process code segment*/
-        parent_va=parent->mapped_info[i].va;
-        /*get the physical address os parent process code segment*/
-        parent_pa=(uint64)user_va_to_pa(parent->pagetable,(void*)parent_va);
-        child_va=parent_va;
-        if(map_pages(child->pagetable,child_va,1,parent_pa,prot_to_type(PROT_WRITE | PROT_READ | PROT_EXEC, 1))==-1)
-          panic("do fork fail at map CODE_SEGMENT");
+        
+        for(int j=0;j<parent->mapped_info[i].npages;j++)
+        {
+          parent_va=parent->mapped_info[i].va+j*PGSIZE;
+          parent_pa=(uint64)user_va_to_pa(parent->pagetable,(void*)parent_va);
+          child_va=parent_va;          
+          if(map_pages(child->pagetable,child_va,PGSIZE,parent_pa,prot_to_type(PROT_WRITE | PROT_READ | PROT_EXEC, 1))==-1)
+            panic("do fork fail when mapping CODE_SEGMENT");
+        }
+        // /*fetch the virtual address of parent process code segment*/
+        // parent_va=parent->mapped_info[i].va;
+        // /*get the physical address os parent process code segment*/
+        // parent_pa=(uint64)user_va_to_pa(parent->pagetable,(void*)parent_va);
+        // child_va=parent_va;
+        // if(map_pages(child->pagetable,child_va,1,parent_pa,prot_to_type(PROT_WRITE | PROT_READ | PROT_EXEC, 1))==-1)
+        //   panic("do fork fail at map CODE_SEGMENT");
 
         // after mapping, register the vm region (do not delete codes below!)
         child->mapped_info[child->total_mapped_region].va = parent->mapped_info[i].va;
         child->mapped_info[child->total_mapped_region].npages =
           parent->mapped_info[i].npages;
         child->mapped_info[child->total_mapped_region].seg_type = CODE_SEGMENT;
+        child->total_mapped_region++;
+        break;
+      case DATA_SEGMENT:
+        for(int j=0;j<parent->mapped_info[i].npages;j++)
+        {
+          parent_va=parent->mapped_info[i].va+j*PGSIZE;
+          parent_pa=(uint64)user_va_to_pa(parent->pagetable,(void*)parent_va);
+          child_va=parent_va;   
+          child_pa=(uint64)alloc_page();
+          memcpy((void*)child_pa,(void*)parent_pa,PGSIZE);
+          if(map_pages(child->pagetable,child_va,PGSIZE,child_pa,prot_to_type(PROT_WRITE | PROT_READ | PROT_EXEC, 1))==-1)
+            panic("do fork fail when mapping CODE_SEGMENT");
+        }
+
+        child->mapped_info[child->total_mapped_region].va = parent->mapped_info[i].va;
+        child->mapped_info[child->total_mapped_region].npages =
+          parent->mapped_info[i].npages;
+        child->mapped_info[child->total_mapped_region].seg_type = DATA_SEGMENT;
         child->total_mapped_region++;
         break;
     }

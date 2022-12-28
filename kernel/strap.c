@@ -58,7 +58,7 @@ void handle_mtimer_trap() {
 stval:the virtual address which is accessed when exception happens
 */
 void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
-  // sprint("handle_page_fault: %llx\n",stval);
+  sprint("handle_page_fault: %llx\n",stval);
   void* pa;
   switch (mcause) {
     case CAUSE_STORE_PAGE_FAULT:
