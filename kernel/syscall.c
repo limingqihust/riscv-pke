@@ -94,8 +94,31 @@ ssize_t sys_user_yield() {
 extern process procs[NPROC];
 ssize_t sys_user_wait(int pid)
 {
+  /*pid is out of range*/
+  if(pid<-1 || pid >=NPROC)
+  {
+    sprint("illegal pid,out of range\n");
+    return -1;
+  }
+  /*pid!=-1 and process pid is not child of current*/
+  int pid_illegal=1;
+  for(int i=0;i<NPROC;i++)
+  {
+    if(procs[i].parent!=NULL)
+    {
+      if(procs[i].pid==pid && procs[i].parent->pid==current->pid)
+      {
+        pid_illegal=0;
+        break;
+      }
+    }
+  }
+  if(pid!=-1 && pid_illegal)
+  {
+    sprint("illegal pid,process pid is not child of current process\n");
+    return -1;
+  }
   current->status=BLOCKED;
-  
   current->wait_pid=pid;
   schedule();
   return -1;
