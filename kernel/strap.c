@@ -58,14 +58,9 @@ stval:the virtual address which is accessed when exception happens
 */
 void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
   sprint("handle_page_fault: %llx\n",stval);
-
   void* pa;
-  // sprint("stval=%llx\n",stval);
-  // sprint("USER_STACK_TOP-32*STACK_SIZE=%llx\n",USER_STACK_TOP-32*STACK_SIZE);
-  if(stval<USER_STACK_TOP-32*STACK_SIZE)
+  if(stval<USER_STACK_TOP-(current->num_stack_page+2)*STACK_SIZE)
     panic("this address is not available!");
-  // uint64 physical_address=lookup_pa((pagetable_t)current->pagetable,sepc);
-  // sprint("physical_address=%llx\n",physical_address);
   switch (mcause) {
     case CAUSE_STORE_PAGE_FAULT:
       // TODO (lab2_3): implement the operations that solve the page fault to
@@ -74,12 +69,13 @@ void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
       // virtual address that causes the page fault.
       /*allocate a new physical page */
       pa = alloc_page();
-      // sprint("pa is %llx\n",pa);
       if(pa==NULL)
         panic("alloc page fail\n");
       /*map the new physical page to virtual address that cause the page fault*/
-      if(map_pages((pagetable_t)current->pagetable,stval,1,(uint64)pa,prot_to_type(PROT_WRITE | PROT_READ, 1))==-1)
+      if(map_pages((pagetable_t)current->pagetable,ROUNDDOWN(stval,PGSIZE),PGSIZE,(uint64)pa,prot_to_type(PROT_WRITE | PROT_READ, 1))==-1)
         panic("handle_user_page_fault fail when map pa to va");
+
+      current->num_stack_page++;
       break;
     default:
       sprint("unknown page fault.\n");
