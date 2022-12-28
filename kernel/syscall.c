@@ -95,8 +95,8 @@ extern process procs[NPROC];
 ssize_t sys_user_wait(int pid)
 {
   current->status=BLOCKED;
-  /*等待任意一个子进程结束*/
-  current->wait_flag=pid;
+  
+  current->wait_pid=pid;
   schedule();
   return -1;
 }

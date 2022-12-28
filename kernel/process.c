@@ -81,7 +81,7 @@ void init_proc_pool() {
   for (int i = 0; i < NPROC; ++i) {
     procs[i].status = FREE;
     procs[i].pid = i;
-    procs[i].wait_flag=32;
+    procs[i].wait_pid=32;
   }
 }
 
@@ -160,9 +160,9 @@ int free_process( process* proc ) {
   if(proc->parent!=NULL)
   {
     /*父进程正在等待自己*/ 
-    if(proc->parent->status==BLOCKED && (proc->parent->wait_flag==proc->pid||proc->parent->wait_flag==-1))
+    if(proc->parent->status==BLOCKED && (proc->parent->wait_pid==proc->pid||proc->parent->wait_pid==-1))
     {
-      proc->parent->wait_flag=32;
+      proc->parent->wait_pid=32;
       proc->parent->status=READY;
       insert_to_ready_queue(proc->parent);
     }
