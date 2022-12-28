@@ -66,8 +66,6 @@ void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
       // dynamically increase application stack.
       // hint: first allocate a new physical page, and then, maps the new page to the
       // virtual address that causes the page fault.
-
-
       /*allocate a new physical page */
       pa = alloc_page();
       if(pa==NULL)

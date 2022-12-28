@@ -240,7 +240,6 @@ int do_fork( process* parent)
           if(map_pages(child->pagetable,child_va,PGSIZE,child_pa,prot_to_type(PROT_WRITE | PROT_READ | PROT_EXEC, 1))==-1)
             panic("do fork fail when mapping CODE_SEGMENT");
         }
-
         child->mapped_info[child->total_mapped_region].va = parent->mapped_info[i].va;
         child->mapped_info[child->total_mapped_region].npages =
           parent->mapped_info[i].npages;
@@ -249,6 +248,7 @@ int do_fork( process* parent)
         break;
     }
   }
+  
 
   child->status = READY;
   child->trapframe->regs.a0 = 0;
