@@ -54,26 +54,19 @@ void handle_mtimer_trap() {
 // sepc: the pc when fault happens;
 // stval: the virtual address that causes pagefault when being accessed.
 //
-/*
-stval:the virtual address which is accessed when exception happens
-*/
+// TODO (lab2_3): implement the operations that solve the page fault to
+// dynamically increase application stack.
+// hint: first allocate a new physical page, and then, maps the new page to the
+// virtual address that causes the page fault.
 void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
   sprint("handle_page_fault: %llx\n",stval);
   void* pa;
   switch (mcause) {
-    case CAUSE_STORE_PAGE_FAULT:
-      // TODO (lab2_3): implement the operations that solve the page fault to
-      // dynamically increase application stack.
-      // hint: first allocate a new physical page, and then, maps the new page to the
-      // virtual address that causes the page fault.
-
-
-      /*allocate a new physical page */
+    case CAUSE_STORE_PAGE_FAULT: 
       pa = alloc_page();
       if(pa==NULL)
         panic("alloc page fail\n");
-      /*map the new physical page to virtual address that cause the page fault*/
-      if(map_pages((pagetable_t)current->pagetable,stval,1,(uint64)pa,prot_to_type(PROT_WRITE | PROT_READ, 1))==-1)
+      if(map_pages((pagetable_t)current->pagetable,ROUNDDOWN(stval, PGSIZE),PGSIZE,(uint64)pa,prot_to_type(PROT_WRITE | PROT_READ, 1))==-1)
         panic("handle_user_page_fault fail when map pa to va");
       break;
     default:
