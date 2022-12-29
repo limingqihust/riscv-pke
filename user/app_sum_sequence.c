@@ -20,19 +20,34 @@ uint64 sum_sequence(uint64 n, int *p) {
     return *p=sum_sequence( n-1, p+1 ) + n;
 }
 
-int main(void) {
-  // FIRST, we need a large enough "n" to trigger pagefaults in the user stack
-  uint64 n = 1024;
+// int main(void) {
+//   // FIRST, we need a large enough "n" to trigger pagefaults in the user stack
+//   uint64 n = 1024;
 
-  // alloc a page size array(int) to store the result of every step
-  // the max limit of the number is 4kB/4 = 1024
+//   // alloc a page size array(int) to store the result of every step
+//   // the max limit of the number is 4kB/4 = 1024
 
-  // SECOND, we use array out of bound to trigger pagefaults in an invalid address
-  /*virtual address of ans is 0000000000400000*/
-  int *ans = (int *)naive_malloc();
-
-  printu("Summation of an arithmetic sequence from 0 to %ld is: %ld \n", n, sum_sequence(n+1, ans) );
+//   // SECOND, we use array out of bound to trigger pagefaults in an invalid address
+//   /*virtual address of ans is 0000000000400000*/
+//   int *ans = (int *)naive_malloc();
+//   printu("Summation of an arithmetic sequence from 0 to %ld is: %ld \n", n, sum_sequence(n+1, ans) );
   
 
+//   exit(0);
+// }
+
+
+struct my_structure 
+{
+  char c;
+  int n; 
+};
+
+int main(void) {
+  struct my_structure* s = (struct my_structure*)naive_malloc();
+  s->c = 'a';
+  s->n = 1;
+  printu("s: %lx, {%c %d}\n", s, s->c, s->n);
+  naive_free(s);
   exit(0);
 }

@@ -148,26 +148,21 @@ void kern_vm_init(void) {
 // convert and return the corresponding physical address of a virtual address (va) of
 // application.
 //
-/*va:virtual address*/
-/*page_dir:a uint64 array with size 512*/
+// TODO (lab2_1): implement user_va_to_pa to convert a given user virtual address "va"
+// to its corresponding physical address, i.e., "pa". To do it, we need to walk
+// through the page table, starting from its directory "page_dir", to locate the PTE
+// that maps "va". If found, returns the "pa" by using:
+// pa = PYHS_ADDR(PTE) + (va & (1<<PGSHIFT -1))
+// Here, PYHS_ADDR() means retrieving the starting address (4KB aligned), and
+// (va & (1<<PGSHIFT -1)) means computing the offset of "va" inside its page.
+// Also, it is possible that "va" is not mapped at all. in such case, we can find
+// invalid PTE, and should return NULL.
 void *user_va_to_pa(pagetable_t page_dir, void *va) {
-  // TODO (lab2_1): implement user_va_to_pa to convert a given user virtual address "va"
-  // to its corresponding physical address, i.e., "pa". To do it, we need to walk
-  // through the page table, starting from its directory "page_dir", to locate the PTE
-  // that maps "va". If found, returns the "pa" by using:
-  // pa = PYHS_ADDR(PTE) + (va & (1<<PGSHIFT -1))
-  // Here, PYHS_ADDR() means retrieving the starting address (4KB aligned), and
-  // (va & (1<<PGSHIFT -1)) means computing the offset of "va" inside its page.
-  // Also, it is possible that "va" is not mapped at all. in such case, we can find
-  // invalid PTE, and should return NULL.
-
-  uint64 PTE=lookup_pa(page_dir,(uint64)va);
-  if(PTE==0)
+  uint64 PPN=lookup_pa(page_dir,(uint64)va);
+  if(PPN==0)
     return (void*)NULL;
-  /*conpute the pysical address with PTE and virtual_address[11:0]*/
-  uint64 pa = PTE + ((uint64)va & ((1<<PGSHIFT) -1));
+  uint64 pa = PPN + ((uint64)va & ((1<<PGSHIFT) -1));
   return (void*)pa;
-
 }
 
 //
@@ -183,23 +178,25 @@ void user_vm_map(pagetable_t page_dir, uint64 va, uint64 size, uint64 pa, int pe
 // unmap virtual address [va, va+size] from the user app.
 // reclaim the physical pages if free!=0
 //
+// TODO (lab2_2): implement user_vm_unmap to disable the mapping of the virtual pages
+// in [va, va+size], and free the corresponding physical pages used by the virtual
+// addresses when if 'free' (the last parameter) is not zero.
+// basic idea here is to first locate the PTEs of the virtual pages, and then reclaim
+// (use free_page() defined in pmm.c) the physical pages. lastly, invalidate the PTEs.
+// as naive_free reclaims only one page at a time, you only need to consider one page
+// to make user/app_naive_malloc to behave correctly.
 void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free) {
-  // TODO (lab2_2): implement user_vm_unmap to disable the mapping of the virtual pages
-  // in [va, va+size], and free the corresponding physical pages used by the virtual
-  // addresses when if 'free' (the last parameter) is not zero.
-  // basic idea here is to first locate the PTEs of the virtual pages, and then reclaim
-  // (use free_page() defined in pmm.c) the physical pages. lastly, invalidate the PTEs.
-  // as naive_free reclaims only one page at a time, you only need to consider one page
-  // to make user/app_naive_malloc to behave correctly.
-  if(!free)
+  if(free)
   {
-    uint64* PTE=page_walk(page_dir,va,0);
-    if(PTE!=NULL)
+    pte_t *pte;
+    uint64 pa;
+    pte = page_walk(page_dir, va, 0);
+    if (pte != 0)
     {
-      free_page((void*)PTE);
-      (*PTE)&=0xfffffff7;
+      pa = PTE2PA(*pte);
+      free_page((void*)pa);
+      (*pte)&=0xfffffffffffffffe;
     }
   }
-
-
 }
+
