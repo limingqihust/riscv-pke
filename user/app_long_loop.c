@@ -14,6 +14,7 @@ int main(void) {
     if (i % 5000000 == 0) printu("wait %d\n", i);
   }
 
+
   exit(0);
 
   return 0;
