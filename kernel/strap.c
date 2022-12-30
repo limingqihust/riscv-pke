@@ -99,8 +99,9 @@ void rrsched() {
     /*schedule next process*/
     schedule();
   }
-
 }
+
+
 
 //
 // kernel/smode_trap.S will pass control to smode_trap_handler, when a trap happens
