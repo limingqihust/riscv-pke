@@ -3,7 +3,7 @@
 
 #include "util/types.h"
 #include "process.h"
-
+#include "spike_interface/spike_utils.h"
 #define MAX_CMDLINE_ARGS 64
 
 // elf header structure
@@ -50,6 +50,15 @@ typedef struct elf_sect_header_t{
     uint64 addralign;
     uint64 entsize;
 } elf_sect_header;
+typedef struct 
+{
+  uint32 st_name;
+  uint8 st_info;
+  uint8 st_other;
+  uint16 st_shndx;
+  uint64 st_value;
+  uint64 st_size;
+} Elf64_Sym;
 
 // compilation units header (in debug line section)
 typedef struct __attribute__((packed)) {
@@ -87,4 +96,11 @@ elf_status elf_load(elf_ctx *ctx);
 
 void load_bincode_from_host_elf(process *p);
 
+
+typedef struct elf_info_t {
+  spike_file_t *f;
+  process *p;
+} elf_info;
+uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset);
+void make_addr_line(elf_ctx *ctx, char *debug_line, uint64 length);
 #endif
