@@ -8,5 +8,6 @@
 
 void insert_to_ready_queue( process* proc );
 void schedule();
-
+void insert_to_semaphore_wait_queue(process* proc,int n);
+process* schedule_semaphore(int n);
 #endif

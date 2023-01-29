@@ -28,7 +28,7 @@ extern char trap_sec_start[];
 
 // process pool. added @lab3_1
 process procs[NPROC];
-
+semaphore sem[NSEM];
 // current points to the currently running user-mode application.
 process* current = NULL;
 

@@ -35,6 +35,45 @@ void insert_to_ready_queue( process* proc ) {
   return;
 }
 
+/*将这个进程插入到信号量的等待序列*/
+void insert_to_semaphore_wait_queue(process* proc,int n)
+{
+  
+  if( sem[n].wait_semaphore_process_queue == NULL ){
+    proc->status = BLOCKED;
+    proc->queue_next = NULL;
+    sem[n].wait_semaphore_process_queue = proc;
+    return;
+  }
+
+  // ready queue is not empty
+  process *p;
+  // browse the ready queue to see if proc is already in-queue
+  for( p=sem[n].wait_semaphore_process_queue; p->queue_next!=NULL; p=p->queue_next )
+    if( p == proc ) return;  //already in queue
+
+  // p points to the last element of the ready queue
+  if( p==proc ) return;
+  p->queue_next = proc;
+  proc->status = BLOCKED;
+  proc->queue_next = NULL;
+
+  return;
+}
+
+// 从n号信号灯的等待队列中取出一个进程
+process* schedule_semaphore(int n)
+{
+  if(sem[n].wait_semaphore_process_queue==NULL)
+    return NULL;
+  // sprint("going to awake process %lld from semaphore %d's waiting queue\n",
+  //         sem[n].wait_semaphore_process_queue->pid,n);
+  process* new_proc=sem[n].wait_semaphore_process_queue;
+  sem[n].wait_semaphore_process_queue=sem[n].wait_semaphore_process_queue->queue_next;
+  return new_proc;
+}
+
+
 //
 // choose a proc from the ready queue, and put it to run.
 // note: schedule() does not take care of previous current process. If the current

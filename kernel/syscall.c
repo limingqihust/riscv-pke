@@ -80,9 +80,6 @@ ssize_t sys_user_yield() {
 
   // sprint("current->pid=%d\n",current->pid);
   // sprint("current->queue_next->pid=%d\n",current->queue_next->pid);
-
-
-
   /*set the status of currently running process to READY*/
   current->status=READY;
   /*insert current process in the rear of ready queue*/
@@ -91,6 +88,59 @@ ssize_t sys_user_yield() {
   schedule();
 
   return 0;
+}
+
+
+/*申请一个信号灯 返回这个信号灯的序列号*/
+int sys_user_sem_new(int n)
+{
+  int i;
+  for(i=0;i<NSEM;i++)
+  {
+    if(sem[i].num==-1)
+      break;
+  }
+  if(sem[i].num!=-1)
+    panic("need more semaphore\n");
+  sem[i].num=n;
+  sem[i].wait_semaphore_process_queue=NULL;
+  return i;
+}
+
+// 对n号信号灯进行P操作
+// 如果num大于0 信号灯数量减一
+// 如果num==0 将该进程加入到信号灯等待序列 并调度其他进程运行
+void sys_user_sem_P(int n)
+{
+  // sprint("process[%lld] P semaphore[%d],semaphore[%d] has num %d\n",current->pid,n,n,sem[n].num);
+  if(sem[n].num>0)
+  {
+    sem[n].num--;
+  }
+  else
+  {
+    // sprint("process[%lld] waiting for semaphore[%d] and insert to sem_waiting queue\n",current->pid,n);
+    insert_to_semaphore_wait_queue(current,n);
+    schedule();
+  }
+}
+
+// 对信号灯进行V操作
+// 如果信号灯数量为0 从该信号灯的等待队列中取出一个加入到ready_queue
+void sys_user_sem_V(int n)
+{
+  sem[n].num++;
+  // 如果这个信号灯的数量之前为0且该信号灯的等待队列有进程 将该进程加入到等待队列
+  // sprint("process[%lld] V semaphore[%d],semaphore[%d] has num %d\n",current->pid,n,n,sem[n].num);
+  if(sem[n].num==1)
+  {
+    process* new_proc=schedule_semaphore(n);
+    if(new_proc!=NULL)
+    {
+      sem[n].num--;
+      insert_to_ready_queue(new_proc);
+    }
+  }
 }
 
 //
@@ -112,6 +162,14 @@ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, l
       return sys_user_fork();
     case SYS_user_yield:
       return sys_user_yield();
+    case SYS_user_sem_new:
+      return sys_user_sem_new(a1);
+    case SYS_user_sem_P:
+      sys_user_sem_P(a1);
+      return 0;
+     case SYS_user_sem_V:
+      sys_user_sem_V(a1);
+      return 0;
     default:
       panic("Unknown syscall %ld \n", a0);
   }
