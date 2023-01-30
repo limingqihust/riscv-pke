@@ -278,6 +278,40 @@ void load_bincode_from_host_elf(process *p) {
   // entry (virtual, also physical in lab1_x) address
   p->trapframe->epc = elfloader.ehdr.entry;
 
+  /*************************/
+  // added @lab1_challenge2
+  uint64 shstrndx=elfloader.ehdr.shstrndx;//shstrndx的索引值
+  uint64 shnum=elfloader.ehdr.shnum;//section header的数目
+  elf_sect_header debug_line_sect,shstrtab_sect;
+  // 读取shstrtab
+  if(elf_fpread(&elfloader,(void*)(&shstrtab_sect),sizeof(elf_sect_header),
+                elfloader.ehdr.shoff+sizeof(elf_sect_header)*shstrndx)!=sizeof(elf_sect_header))
+      panic("load shstrtab section header fail\n");
+  char shstrtab[shstrtab_sect.size];
+  if(elf_fpread(&elfloader,(void*)&shstrtab,shstrtab_sect.size,
+              shstrtab_sect.offset)!=shstrtab_sect.size)
+    panic("load section shstrtab fail");
+
+  // 读取debug_line_sect
+  int i,off;
+  for(i=0,off=elfloader.ehdr.shoff;i<shnum;i++,off+=sizeof(elf_sect_header))
+  {
+    if(elf_fpread(&elfloader,(void*)(&debug_line_sect),
+                  sizeof(elf_sect_header),off)!=sizeof(elf_sect_header))
+      panic("load section header into elfloader fail\n");
+    if(strcmp(shstrtab+debug_line_sect.name,".debug_line")==0)
+      break;
+  }
+
+
+  char debug_data[debug_line_sect.size];
+  if(elf_fpread(&elfloader,(void*)debug_data,debug_line_sect.size,
+              debug_line_sect.offset)!=debug_line_sect.size)
+    panic("load section debug_line fail");
+  make_addr_line(&elfloader, debug_data, debug_line_sect.size);
+  /***********************************/
+ 
+
   // close the host spike file
   spike_file_close( info.f );
 

@@ -24,126 +24,76 @@ static void handle_timer() {
   // setup a soft interrupt in sip (S-mode Interrupt Pending) to be handled in S-mode
   write_csr(sip, SIP_SSIP);
 }
-void print_errorline()
+
+
+/*
+typedef struct {
+    uint64 dir; 
+    char *file;
+} code_file;
+typedef struct {
+    uint64 addr, line, file;
+} addr_line;
+*/
+void print_errorline(uint64 mepc)
 {
-  sprint("print_errorline begin\n");
   /****************************************************************************/
-  elf_ctx elfloader;
+  char *debugline=current->debugline; 
+  char **dir=current->dir;            // 所有代码文件的文件夹名称的字符串数组 共64个
+  code_file *file=current->file;      // 所有代码文件的 {文件名字符串指针,其文件夹路径在dir数组中的索引} 共64个
+  addr_line *line=current->line;      // {指令地址，代码行号，文件名在file数组中的索引}
+  int line_ind=current->line_ind;
+  char* file_name=NULL;
+  char* dir_name=NULL;
+  uint64 row_num=0;
+  for(int i=0;i<line_ind;i++)
+  {
+    if(mepc==line[i].addr)
+    {
+      row_num=line[i].line;
+      file_name=file[line[i].file].file;
+      dir_name=dir[file[line[i].file].dir];
+      break;
+    }
+  }
+  sprint("Runtime error at %s/%s:%lld\n",dir_name,file_name,row_num);
+  int c_size=strlen(file_name)+strlen(dir_name)+1;
+  char c_name[c_size];
+  strcpy(c_name,dir_name);
+  c_name[strlen(dir_name)]='/';
+  strcpy(c_name+strlen(dir_name)+1,file_name);
+  c_name[c_size+1]='\0';
+
   elf_info info;
-  info.f = spike_file_open("obj/app_errorline", O_RDONLY, 0);
-  info.p = current;
-  /*读取elf header到elfloader.ehdr中*/
-  if(elf_init(&elfloader, &info)!=EL_OK)
-    panic("elf init error\n");
-  if (elf_load(&elfloader) != EL_OK) panic("Fail on loading elf.\n");
-
-  uint64 shstrndx=elfloader.ehdr.shstrndx;//shstrndx的索引值
-  uint64 shnum=elfloader.ehdr.shnum;//section header的数目
-  elf_sect_header section_header[shnum];
-  int i,off;
-  for(i=0,off=elfloader.ehdr.shoff;i<shnum;i++,off+=sizeof(elf_sect_header))
+  spike_file_t* f = spike_file_open(c_name, O_RDONLY, 0);
+  int cur_row=1;
+  char cur_char;
+  int cur_idx=0;
+  for(cur_idx=0;;cur_idx++)
   {
-    /*读取 section header*/
-    if(elf_fpread(&elfloader,(void*)(section_header+i),
-                  sizeof(elf_sect_header),off)!=sizeof(elf_sect_header))
-      panic("load section header into elfloader fail\n");
-  }
-  
-  /*读取shstrtab*/
-  char shstrtab[section_header[shstrndx].size];
-  if(elf_fpread(&elfloader,(void*)&shstrtab,section_header[shstrndx].size,
-              section_header[shstrndx].offset)!=section_header[shstrndx].size)
-    panic("load section shstrtab fail");
-  int idx_symtab=0,idx_strtab=0;
-  for(int i=0;i<shnum;i++)
-  {
-    if(strcmp(shstrtab+section_header[i].name,".symtab")==0)
-    {
-      idx_symtab=i;
+    spike_file_pread(f, (void*)&cur_char, 1, cur_idx);
+    if(cur_char=='\n')
+      cur_row++;
+    if(cur_row==row_num)
       break;
-    }
   }
-  for(int i=0;i<shnum;i++)
+  for(int i=0;;i++)
   {
-    if(strcmp(shstrtab+section_header[i].name,".strtab")==0)
-    {
-      idx_strtab=i;
+    spike_file_pread(f, (void*)&cur_char,1,cur_idx+i+1);
+    sprint("%c",cur_char);
+    if(cur_char=='\n')
       break;
-    }
-  }  
-
-  int idx_debug_line_section_header=0;
-  for(int i=0;i<shnum;i++)
-  {
-    if(strcmp(shstrtab+section_header[i].name,".debug_line")==0)
-    {
-      idx_debug_line_section_header=i;
-      break;
-    }
   }
-  /*读取debug_line*/
-  uint64 debug_line_offset=section_header[idx_debug_line_section_header].offset;
-  uint64 debug_line_size=section_header[idx_debug_line_section_header].size;
-  char debug_line[debug_line_size];
-  if(elf_fpread(&elfloader,(void*)debug_line,debug_line_size,
-              debug_line_offset)!=debug_line_size)
-    panic("load section debug_line fail");
-  sprint("make_addr_line begin\n");
-  make_addr_line(&elfloader, debug_line, debug_line_size);
-  sprint("make_addr_line done\n");
-
-  /*读取symtab*/
-  int num_symbol=section_header[idx_symtab].size/sizeof(Elf64_Sym);
-  Elf64_Sym symbol[num_symbol];
-  if(elf_fpread(&elfloader,(void*)&symbol,section_header[idx_symtab].size,
-              section_header[idx_symtab].offset)!=section_header[idx_symtab].size)
-    panic("load section symtab fail");
-  
-  /*读取strtab*/
-  char strtab[section_header[idx_strtab].size];
-  if(elf_fpread(&elfloader,(void*)&strtab,section_header[idx_strtab].size,
-              section_header[idx_strtab].offset)!=section_header[idx_strtab].size)
-    panic("load section strtab fail");
-  spike_file_close( info.f );  
-/*****************************************************/
-  sprint("print_errorline done\n");
+  /***************************************************************************/
 }
 
-void print_error_case(uint64 mcause)
-{
-  switch(mcause)
-  {
-    case CAUSE_FETCH_ACCESS:
-      sprint("Instruction access fault!\n");
-      break;
-    case CAUSE_LOAD_ACCESS:
-      sprint("Load access fault!\n");
-    case CAUSE_STORE_ACCESS:
-      sprint("Store/AMO access fault!\n");
-      break;
-    case CAUSE_ILLEGAL_INSTRUCTION:
-      sprint("Illegal instruction!\n");
-      break;
-    case CAUSE_MISALIGNED_LOAD:
-      sprint("Misaligned Load!\n");
-      break;
-    case CAUSE_MISALIGNED_STORE:
-      sprint("Misaligned AMO!\n");
-      break;
-    default:
-      sprint("machine trap(): unexpected mscause %p\n", mcause);
-      sprint("            mepc=%p mtval=%p\n", read_csr(mepc), read_csr(mtval));
-      sprint( "unexpected exception happened in M-mode.\n" );
-      break;
-  }
-}
 //
 // handle_mtrap calls a handling function according to the type of a machine mode interrupt (trap).
 //
 void handle_mtrap() {
   uint64 mcause = read_csr(mcause);
-  print_error_case(mcause);
-  print_errorline();
+  uint64 mepc=read_csr(mepc);
+  print_errorline(mepc);
   switch (mcause) {
     case CAUSE_MTIMER:
       handle_timer();
@@ -158,7 +108,6 @@ void handle_mtrap() {
       break;
     case CAUSE_ILLEGAL_INSTRUCTION:
       handle_illegal_instruction();
-
       break;
     case CAUSE_MISALIGNED_LOAD:
       handle_misaligned_load();

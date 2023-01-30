@@ -17,7 +17,8 @@ typedef struct trapframe_t {
 
 // code file struct, including directory index and file name char pointer
 typedef struct {
-    uint64 dir; char *file;
+    uint64 dir; 
+    char *file;
 } code_file;
 
 // address-line number-file name table
@@ -33,7 +34,11 @@ typedef struct process_t {
   trapframe* trapframe;
 
   // added @lab1_challenge2
-  char *debugline; char **dir; code_file *file; addr_line *line; int line_ind;
+  char *debugline; 
+  char **dir;             // 所有代码文件的文件夹名称的字符串数组
+  code_file *file;        // 所有代码文件的文件名字符串指针以及其文件夹路径在dir数组中的索引
+  addr_line *line;        // 所有指令地址，代码行号，文件名在file数组中的索引三者的映射关系
+  int line_ind;           //
 }process;
 
 void switch_to(process*);
