@@ -19,7 +19,6 @@
 int map_pages(pagetable_t page_dir, uint64 va, uint64 size, uint64 pa, int perm) {
   uint64 first, last;
   pte_t *pte;
-
   for (first = ROUNDDOWN(va, PGSIZE), last = ROUNDDOWN(va + size - 1, PGSIZE);
       first <= last; first += PGSIZE, pa += PGSIZE) {
     if ((pte = page_walk(page_dir, first, 1)) == 0) return -1;
@@ -153,6 +152,8 @@ void kern_vm_init(void) {
 // convert and return the corresponding physical address of a virtual address (va) of
 // application.
 //
+/*va:virtual address*/
+/*page_dir:a uint64 array with size 512*/
 void *user_va_to_pa(pagetable_t page_dir, void *va) {
   // TODO (lab2_1): implement user_va_to_pa to convert a given user virtual address "va"
   // to its corresponding physical address, i.e., "pa". To do it, we need to walk
@@ -163,7 +164,13 @@ void *user_va_to_pa(pagetable_t page_dir, void *va) {
   // (va & (1<<PGSHIFT -1)) means computing the offset of "va" inside its page.
   // Also, it is possible that "va" is not mapped at all. in such case, we can find
   // invalid PTE, and should return NULL.
-  panic( "You have to implement user_va_to_pa (convert user va to pa) to print messages in lab2_1.\n" );
+
+  uint64 PTE=lookup_pa(page_dir,(uint64)va);
+  if(PTE==0)
+    return (void*)NULL;
+  /*conpute the pysical address with PTE and virtual_address[11:0]*/
+  uint64 pa = PTE + ((uint64)va & ((1<<PGSHIFT) -1));
+  return (void*)pa;
 
 }
 
@@ -188,7 +195,16 @@ void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free) {
   // (use free_page() defined in pmm.c) the physical pages. lastly, invalidate the PTEs.
   // as naive_free reclaims only one page at a time, you only need to consider one page
   // to make user/app_naive_malloc to behave correctly.
-  panic( "You have to implement user_vm_unmap to free pages using naive_free in lab2_2.\n" );
+  if(!free)
+  {
+    uint64* PTE=page_walk(page_dir,va,0);
+    if(PTE!=NULL)
+    {
+      free_page((void*)PTE);
+      (*PTE)&=0xfffffff7;
+    }
+  }
+
 
 }
 
