@@ -493,14 +493,12 @@ struct vinode *rfs_create(struct vinode *parent, struct dentry *sub_dentry) {
   // blocks, i.e., its block count.
   // Note: DO NOT DELETE CODE BELOW PANIC.
   // panic("You need to implement the code of populating a disk inode in lab4_1.\n" );
-  free_dinode->size=0;
-  free_dinode->type=R_FILE;
-  free_dinode->nlinks=0;
-  free_dinode->blocks=0;
 
-
-
-
+  // 初始化索引节点
+  free_dinode->size=0;          // size of the file
+  free_dinode->type=R_FILE;     // 索引结点的类型 数据文件/目录文件
+  free_dinode->nlinks=0;        // 指向该文件的硬链接数
+  free_dinode->blocks=0;        // block数
 
   // DO NOT REMOVE ANY CODE BELOW.
   // allocate a free block for the file
@@ -632,6 +630,7 @@ int rfs_hook_closedir(struct vinode *dir_vinode, struct dentry *dentry) {
 // if offset is 1, the second entry is read, and so on.
 // return: 0 on success, -1 when there are no more entry (end of the list).
 //
+// 从dir_vinode中读第offset个目录项给dir
 int rfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {
   int total_direntrys = dir_vinode->size / sizeof(struct rfs_direntry);
   int one_block_direntrys = RFS_BLKSIZE / sizeof(struct rfs_direntry);
@@ -654,7 +653,11 @@ int rfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {
   // the method of returning is to popular proper members of "dir", more specifically,
   // dir->name and dir->inum.
   // note: DO NOT DELETE CODE BELOW PANIC.
-  panic("You need to implement the code for reading a directory entry of rfs in lab4_2.\n" );
+  // panic("You need to implement the code for reading a directory entry of rfs in lab4_2.\n" );
+  dir->inum=p_direntry->inum;
+  memcpy(dir->name,p_direntry->name,strlen(p_direntry->name));
+
+
 
   // DO NOT DELETE CODE BELOW.
   (*offset)++;
