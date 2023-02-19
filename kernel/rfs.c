@@ -494,7 +494,13 @@ struct vinode *rfs_create(struct vinode *parent, struct dentry *sub_dentry) {
   // nlinks, i.e., the number of links.
   // blocks, i.e., its block count.
   // Note: DO NOT DELETE CODE BELOW PANIC.
-  panic("You need to implement the code of populating a disk inode in lab4_1.\n" );
+  // panic("You need to implement the code of populating a disk inode in lab4_1.\n" );
+
+  // 初始化索引节点
+  free_dinode->size=0;          // size of the file
+  free_dinode->type=R_FILE;     // 索引结点的类型 数据文件/目录文件
+  free_dinode->nlinks=1;        // 指向该文件的硬链接数
+  free_dinode->blocks=0;        // block数
 
   // DO NOT REMOVE ANY CODE BELOW.
   // allocate a free block for the file
@@ -573,6 +579,11 @@ int rfs_disk_stat(struct vinode *vinode, struct istat *istat) {
   return 0;
 }
 
+
+// link_node 旧文件 
+// 更新旧文件的硬链接数
+// 新创建硬链接的文件的父目录中添加目录项 :新文件名 旧文件的dinode号
+// 将vinode写回RAM DISK
 //
 // create a hard link under a direntry "parent" for an existing file of "link_node"
 //
@@ -581,7 +592,7 @@ int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *li
   // inode is "link_node". To do that, we need first to know the name of the new (link)
   // file, and then, we need to increase the link count of the existing file. Lastly, 
   // we need to make the changes persistent to disk. To know the name of the new (link)
-  // file, you need to stuty the structure of dentry, that contains the name member;
+  // file, you need to study the structure of dentry, that contains the name member;
   // To incease the link count of the existing file, you need to study the structure of
   // vfs inode, since it contains the inode information of the existing file.
   //
@@ -591,7 +602,22 @@ int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *li
   //    rfs_add_direntry here.
   // 3) persistent the changes to disk. you can use rfs_write_back_vinode here.
   //
-  panic("You need to implement the code for creating a hard link in lab4_3.\n" );
+  
+  // increase the link count of the existing file
+  link_node->nlinks++;
+
+  // append the new file as a dentry to its parent directory
+  if (rfs_add_direntry(parent,sub_dentry->name,link_node->inum) == -1) {
+    panic("rfs_add_direntry fail\n");
+  }
+  if(rfs_write_back_vinode(parent)==-1)
+    panic("rfs_write_back_vincode fail\n");
+  if(rfs_write_back_vinode(link_node)==-1)
+    panic("rfs_write_back_vincode fail\n");
+
+  return 0;
+  
+  // panic("You need to implement the code for creating a hard link in lab4_3.\n" );
 }
 
 //
@@ -765,6 +791,7 @@ int rfs_hook_closedir(struct vinode *dir_vinode, struct dentry *dentry) {
 // if offset is 1, the second entry is read, and so on.
 // return: 0 on success, -1 when there are no more entry (end of the list).
 //
+// 从dir_vinode中读第offset个目录项给dir
 int rfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {
   int total_direntrys = dir_vinode->size / sizeof(struct rfs_direntry);
   int one_block_direntrys = RFS_BLKSIZE / sizeof(struct rfs_direntry);
@@ -787,7 +814,11 @@ int rfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {
   // the method of returning is to popular proper members of "dir", more specifically,
   // dir->name and dir->inum.
   // note: DO NOT DELETE CODE BELOW PANIC.
-  panic("You need to implement the code for reading a directory entry of rfs in lab4_2.\n" );
+  // panic("You need to implement the code for reading a directory entry of rfs in lab4_2.\n" );
+  dir->inum=p_direntry->inum;
+  memcpy(dir->name,p_direntry->name,strlen(p_direntry->name));
+
+
 
   // DO NOT DELETE CODE BELOW.
   (*offset)++;
