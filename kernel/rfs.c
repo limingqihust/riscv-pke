@@ -499,7 +499,7 @@ struct vinode *rfs_create(struct vinode *parent, struct dentry *sub_dentry) {
   // 初始化索引节点
   free_dinode->size=0;          // size of the file
   free_dinode->type=R_FILE;     // 索引结点的类型 数据文件/目录文件
-  free_dinode->nlinks=0;        // 指向该文件的硬链接数
+  free_dinode->nlinks=1;        // 指向该文件的硬链接数
   free_dinode->blocks=0;        // block数
 
   // DO NOT REMOVE ANY CODE BELOW.
@@ -579,6 +579,11 @@ int rfs_disk_stat(struct vinode *vinode, struct istat *istat) {
   return 0;
 }
 
+
+// link_node 旧文件 
+// 更新旧文件的硬链接数
+// 新创建硬链接的文件的父目录中添加目录项 :新文件名 旧文件的dinode号
+// 将vinode写回RAM DISK
 //
 // create a hard link under a direntry "parent" for an existing file of "link_node"
 //
@@ -587,7 +592,7 @@ int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *li
   // inode is "link_node". To do that, we need first to know the name of the new (link)
   // file, and then, we need to increase the link count of the existing file. Lastly, 
   // we need to make the changes persistent to disk. To know the name of the new (link)
-  // file, you need to stuty the structure of dentry, that contains the name member;
+  // file, you need to study the structure of dentry, that contains the name member;
   // To incease the link count of the existing file, you need to study the structure of
   // vfs inode, since it contains the inode information of the existing file.
   //
@@ -597,7 +602,22 @@ int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *li
   //    rfs_add_direntry here.
   // 3) persistent the changes to disk. you can use rfs_write_back_vinode here.
   //
-  panic("You need to implement the code for creating a hard link in lab4_3.\n" );
+  
+  // increase the link count of the existing file
+  link_node->nlinks++;
+
+  // append the new file as a dentry to its parent directory
+  if (rfs_add_direntry(parent,sub_dentry->name,link_node->inum) == -1) {
+    panic("rfs_add_direntry fail\n");
+  }
+  if(rfs_write_back_vinode(parent)==-1)
+    panic("rfs_write_back_vincode fail\n");
+  if(rfs_write_back_vinode(link_node)==-1)
+    panic("rfs_write_back_vincode fail\n");
+
+  return 0;
+  
+  // panic("You need to implement the code for creating a hard link in lab4_3.\n" );
 }
 
 //

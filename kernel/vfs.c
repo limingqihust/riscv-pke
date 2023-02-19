@@ -263,6 +263,7 @@ int vfs_link(const char *oldpath, const char *newpath) {
   struct dentry *parent = vfs_root_dentry;
   char miss_name[MAX_PATH_LEN];
 
+  // 查找将被链接的文件 
   // lookup oldpath
   struct dentry *old_file_dentry =
       lookup_final_dentry(oldpath, &parent, miss_name);
@@ -270,13 +271,15 @@ int vfs_link(const char *oldpath, const char *newpath) {
     sprint("vfs_link: cannot find the file!\n");
     return -1;
   }
-
+  // 判断是一个数据文件
   if (old_file_dentry->dentry_inode->type != FILE_I) {
     sprint("vfs_link: cannot link a directory!\n");
     return -1;
   }
 
   parent = vfs_root_dentry;
+
+  // 查找要创建的硬链接 确保不和已存在的文件冲突
   // lookup the newpath
   // note that parent is changed to be the last directory entry to be accessed
   struct dentry *new_file_dentry =
