@@ -9,6 +9,7 @@
 #include "util/types.h"
 #include "util/snprintf.h"
 #include "kernel/syscall.h"
+#include "string.h"
 
 uint64 do_user_call(uint64 sysnum, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint64 a5, uint64 a6,
                  uint64 a7) {
@@ -170,4 +171,13 @@ int unlink_u(const char *fn){
 //
 int close(int fd) {
   return do_user_call(SYS_user_close, fd, 0, 0, 0, 0, 0, 0);
+}
+
+void read_cwd(char* path){
+  memset(path,'\0',strlen(path));
+  do_user_call(SYS_user_pwd, (uint64)path, 0, 0, 0, 0, 0, 0);
+}
+int change_cwd(const char* path){
+  do_user_call(SYS_user_cd, (uint64)path, 0, 0, 0, 0, 0, 0);
+  return 0;
 }

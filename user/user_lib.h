@@ -33,5 +33,8 @@ int closedir_u(int fd);
 int link_u(const char *fn1, const char *fn2);
 int unlink_u(const char *fn);
 
+// added @ lab4_challenge_1
+void read_cwd(char* path);
+int change_cwd(const char* path);
 
 #endif
