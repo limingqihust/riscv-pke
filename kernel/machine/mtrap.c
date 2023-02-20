@@ -43,9 +43,12 @@ void print_errorline(uint64 mepc)
   code_file *file=current->file;      // 所有代码文件的 {文件名字符串指针,其文件夹路径在dir数组中的索引} 共64个
   addr_line *line=current->line;      // {指令地址，代码行号，文件名在file数组中的索引}
   int line_ind=current->line_ind;
+  sprint("%d\n",current->line_ind);
+  
   char* file_name=NULL;
   char* dir_name=NULL;
   uint64 row_num=0;
+  
   for(int i=0;i<line_ind;i++)
   {
     if(mepc==line[i].addr)
@@ -56,27 +59,32 @@ void print_errorline(uint64 mepc)
       break;
     }
   }
+  
   sprint("Runtime error at %s/%s:%lld\n",dir_name,file_name,row_num);
   int c_size=strlen(file_name)+strlen(dir_name)+1;
+  
   char c_name[c_size];
   strcpy(c_name,dir_name);
   c_name[strlen(dir_name)]='/';
   strcpy(c_name+strlen(dir_name)+1,file_name);
   c_name[c_size+1]='\0';
-
   elf_info info;
   spike_file_t* f = spike_file_open(c_name, O_RDONLY, 0);
+  
   int cur_row=1;
   char cur_char;
   int cur_idx=0;
+  
   for(cur_idx=0;;cur_idx++)
   {
-    spike_file_pread(f, (void*)&cur_char, 1, cur_idx);
+    spike_file_pread(f, (void*)&cur_char, 1, cur_idx);                                // 这里触发了异常？？？
     if(cur_char=='\n')
       cur_row++;
     if(cur_row==row_num)
       break;
   }
+  
+  
   for(int i=0;;i++)
   {
     spike_file_pread(f, (void*)&cur_char,1,cur_idx+i+1);
