@@ -499,7 +499,7 @@ struct vinode *rfs_create(struct vinode *parent, struct dentry *sub_dentry) {
   // 初始化索引节点
   free_dinode->size=0;          // size of the file
   free_dinode->type=R_FILE;     // 索引结点的类型 数据文件/目录文件
-  free_dinode->nlinks=0;        // 指向该文件的硬链接数
+  free_dinode->nlinks=1;        // 指向该文件的硬链接数
   free_dinode->blocks=0;        // block数
 
   // DO NOT REMOVE ANY CODE BELOW.
@@ -597,7 +597,23 @@ int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *li
   //    rfs_add_direntry here.
   // 3) persistent the changes to disk. you can use rfs_write_back_vinode here.
   //
-  panic("You need to implement the code for creating a hard link in lab4_3.\n" );
+
+  // increase the link count of the file to be hard-linked
+  link_node->nlinks++;
+
+  // append the new (link) file as a dentry to its parent directory
+  if(rfs_add_direntry(parent,sub_dentry->name,link_node->inum)!=0)
+    panic("rfs_add_direntry fail\n");
+
+  if(rfs_write_back_vinode(parent)!=0)
+    panic("rfs_write_back_vinode parent fail\n");
+
+  if(rfs_write_back_vinode(link_node)!=0)
+    panic("rfs_write_back_vinode link_node fail\n");
+
+
+
+  return 0;
 }
 
 //
