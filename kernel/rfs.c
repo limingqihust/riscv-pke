@@ -600,18 +600,17 @@ int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *li
 
   // increase the link count of the file to be hard-linked
   link_node->nlinks++;
-
   // append the new (link) file as a dentry to its parent directory
-  if(rfs_add_direntry(parent,sub_dentry->name,link_node->inum)!=0)
-    panic("rfs_add_direntry fail\n");
+  if(rfs_add_direntry(parent, sub_dentry->name, link_node->inum) != 0) {
+    panic("rfs_add_direntry failed\n");
+  }
 
-  if(rfs_write_back_vinode(parent)!=0)
-    panic("rfs_write_back_vinode parent fail\n");
-
-  if(rfs_write_back_vinode(link_node)!=0)
-    panic("rfs_write_back_vinode link_node fail\n");
-
-
+  if (rfs_write_back_vinode(parent) != 0) {
+    panic("rfs_write_back_vinode parent failed\n");
+  }
+  if(rfs_write_back_vinode(link_node)!=0){
+    panic("rfs_write_back_vinode link_node failed\n");
+  };
 
   return 0;
 }
@@ -812,7 +811,7 @@ int rfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {
   // note: DO NOT DELETE CODE BELOW PANIC.
   // panic("You need to implement the code for reading a directory entry of rfs in lab4_2.\n" );
   dir->inum=p_direntry->inum;
-  memcpy(dir->name,p_direntry->name,strlen(p_direntry->name));
+  memcpy(dir->name,p_direntry->name,sizeof(dir->name));
 
 
 
