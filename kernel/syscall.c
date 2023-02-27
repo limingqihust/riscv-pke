@@ -215,9 +215,23 @@ ssize_t sys_user_unlink(char * vfn){
 ssize_t sys_user_exec(char* vfn){
   char * pfn = (char*)user_va_to_pa((pagetable_t)(current->pagetable), (void*)vfn);
   sprint("Application: %s\n",pfn);
-  int code_segment_offset,data_segment_offset;
-  sprint("CODE_SEGMENT added at mapped info offset:%d\n",code_segment_offset);
-  sprint("DATA_SEGMENT added at mapped info offset:%d\n",data_segment_offset);
+
+  // elf_ctx elfloader;
+  // elf_info info;
+  // info.f = spike_file_open(pfn, O_RDONLY, 0);
+  // if(elf_init(&elfloader, &info)!=EL_OK)
+  //   panic("elf init error\n");
+  
+
+
+
+
+
+
+
+  // int code_segment_offset,data_segment_offset;
+  // sprint("CODE_SEGMENT added at mapped info offset:%d\n",code_segment_offset);
+  // sprint("DATA_SEGMENT added at mapped info offset:%d\n",data_segment_offset);
   int fd=do_open(pfn, O_RDONLY);
   struct file exec_file=current->pfiles->opened_files[fd];
   int exec_size=exec_file.f_dentry->dentry_inode->size;
