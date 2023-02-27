@@ -428,6 +428,7 @@ struct file *vfs_opendir(const char *path) {
 //
 // read a direntry entry from a direntry specified by "file"
 // the read direntry entry is stored in "dir"
+// 读取目录文件到dir中
 //
 int vfs_readdir(struct file *file, struct dir *dir) {
   if (file->f_dentry->dentry_inode->type != DIR_I) {

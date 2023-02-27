@@ -41,7 +41,6 @@ uint64 g_ufree_page = USER_FREE_ADDRESS_START;
 void switch_to(process* proc) {
   assert(proc);
   current = proc;
-
   // write the smode_trap_vector (64-bit func. address) defined in kernel/strap_vector.S
   // to the stvec privilege register, such that trap handler pointed by smode_trap_vector
   // will be triggered when an interrupt occurs in S mode.
@@ -180,6 +179,7 @@ int do_fork( process* parent)
   for( int i=0; i<parent->total_mapped_region; i++ ){
     // browse parent's vm space, and copy its trapframe and data segments,
     // map its code segment.
+    uint64 parent_va,parent_pa,child_va;
     switch( parent->mapped_info[i].seg_type ){
       case CONTEXT_SEGMENT:
         *child->trapframe = *parent->trapframe;
@@ -198,7 +198,14 @@ int do_fork( process* parent)
         // address region of child to the physical pages that actually store the code
         // segment of parent process.
         // DO NOT COPY THE PHYSICAL PAGES, JUST MAP THEM.
-        panic( "You need to implement the code segment mapping of child in lab3_1.\n" );
+
+        /*fetch the virtual address of parent process code segment*/
+        parent_va=parent->mapped_info[i].va;
+        /*get the physical address os parent process code segment*/
+        parent_pa=(uint64)user_va_to_pa(parent->pagetable,(void*)parent_va);
+        child_va=parent_va;
+        if(map_pages(child->pagetable,child_va,1,parent_pa,prot_to_type(PROT_WRITE | PROT_READ | PROT_EXEC, 1))==-1)
+          panic("do fork fail at map CODE_SEGMENT");
 
         // after mapping, register the vm region (do not delete codes below!)
         child->mapped_info[child->total_mapped_region].va = parent->mapped_info[i].va;
