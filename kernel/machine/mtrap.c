@@ -43,12 +43,10 @@ void print_errorline(uint64 mepc)
   code_file *file=current->file;      // 所有代码文件的 {文件名字符串指针,其文件夹路径在dir数组中的索引} 共64个
   addr_line *line=current->line;      // {指令地址，代码行号，文件名在file数组中的索引}
   int line_ind=current->line_ind;
-  sprint("%d\n",current->line_ind);
-  
+  sprint("hello world\n");
   char* file_name=NULL;
   char* dir_name=NULL;
   uint64 row_num=0;
-  
   for(int i=0;i<line_ind;i++)
   {
     if(mepc==line[i].addr)
@@ -70,13 +68,12 @@ void print_errorline(uint64 mepc)
   c_name[c_size+1]='\0';
   elf_info info;
   spike_file_t* f = spike_file_open(c_name, O_RDONLY, 0);
-  
   int cur_row=1;
   char cur_char;
   int cur_idx=0;
-  
   for(cur_idx=0;;cur_idx++)
   {
+    panic("panic\n");
     spike_file_pread(f, (void*)&cur_char, 1, cur_idx);                                // 这里触发了异常？？？
     if(cur_char=='\n')
       cur_row++;
@@ -92,8 +89,43 @@ void print_errorline(uint64 mepc)
     if(cur_char=='\n')
       break;
   }
+  
   /***************************************************************************/
 }
+
+void print_mtrap_type()
+{
+  uint64 mcause=read_csr(mcause);
+  switch(mcause)
+  {
+    case CAUSE_MTIMER:
+      sprint("cause_mtimer\n");
+      break;
+    case CAUSE_FETCH_ACCESS:
+      sprint("cause_fetch_access\n");
+      break;
+    case CAUSE_LOAD_ACCESS:
+      sprint("cause_load_access\n");
+      break;
+    case CAUSE_STORE_ACCESS:
+      sprint("cause_store_access\n");
+      break;
+    case CAUSE_ILLEGAL_INSTRUCTION:
+      sprint("cause_illegal instruction\n");
+      break;
+    case CAUSE_MISALIGNED_LOAD:
+      sprint("cause_misaligned_load\n");
+      break;
+    case CAUSE_MISALIGNED_STORE:
+      sprint("cause_misaligned_store\n");
+      break;
+    default:
+      sprint("other type trap\n");
+      break;
+  }
+}
+
+
 
 //
 // handle_mtrap calls a handling function according to the type of a machine mode interrupt (trap).
@@ -101,6 +133,7 @@ void print_errorline(uint64 mepc)
 void handle_mtrap() {
   uint64 mcause = read_csr(mcause);
   uint64 mepc=read_csr(mepc);
+  // print_mtrap_type();
   print_errorline(mepc);
   switch (mcause) {
     case CAUSE_MTIMER:
@@ -111,6 +144,7 @@ void handle_mtrap() {
       break;
     case CAUSE_LOAD_ACCESS:
       handle_load_access_fault();
+      break;
     case CAUSE_STORE_ACCESS:
       handle_store_access_fault();
       break;

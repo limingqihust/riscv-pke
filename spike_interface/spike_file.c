@@ -101,7 +101,7 @@ void spike_file_init(void) {
 spike_file_t* spike_file_openat(int dirfd, const char* fn, int flags, int mode) {
   spike_file_t* f = spike_file_get_free();
   if (f == NULL) return ERR_PTR(-ENOMEM);
-
+  sprint("here\n");
   size_t fn_size = strlen(fn) + 1;
   long ret = frontend_syscall(HTIFSYS_openat, dirfd, (uint64)fn, fn_size, flags, mode, 0, 0);
   if (ret >= 0) {
