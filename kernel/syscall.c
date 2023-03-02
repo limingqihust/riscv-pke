@@ -15,6 +15,8 @@
 #include "sched.h"
 #include "proc_file.h"
 #include "elf.h"
+#include "memlayout.h"
+
 
 #include "spike_interface/spike_utils.h"
 
@@ -213,29 +215,71 @@ ssize_t sys_user_unlink(char * vfn){
   return do_unlink(pfn);
 }
 
+
+
+extern char trap_sec_start[];
 ssize_t sys_user_exec(char* vfn){
   char * pfn = (char*)user_va_to_pa((pagetable_t)(current->pagetable), (void*)vfn);
-
+  sprint("Application: %s\n",pfn);
   elf_ctx elfloader;
   elf_info info;
 
-  info.f = spike_file_open("hostfs_root/bin/app_ls", O_RDONLY, 0);
-  // info.p=alloc_process();
+  // char exec_name[100]="hostfs_root";
+  // strcpy(exec_name+strlen(exec_name),pfn);
+  info.f=spike_file_open(exec_name,O_RDONLY,0);
+  // info.f=spike_file_open(pfn,O_RDONLY,0);
+  
   info.p=current;
   /* load elf header */
   if(elf_init(&elfloader, &info)!=EL_OK)
     panic("elf init error\n");
+  
+  /* empty vm space */
+  current->trapframe = (trapframe *)alloc_page();  //trapframe, used to save context
+  memset(current->trapframe, 0, sizeof(trapframe));
 
-  /* empty the CODE_SEGMENT,DATA_SEGMENT of the current process*/
-  int cnt=0;
-  for(int i=0;i<current->total_mapped_region;i++)
-  {
-    if(current->mapped_info[i].seg_type==CODE_SEGMENT ||
-      current->mapped_info[i].seg_type==DATA_SEGMENT)
-    {
-      current->mapped_info[i].seg_type=-1;
-    }
-  }
+  /* empty page directory */
+  current->pagetable = (pagetable_t)alloc_page();
+  memset((void *)current->pagetable, 0, PGSIZE);
+
+  current->kstack = (uint64)alloc_page() + PGSIZE;   //user kernel stack top
+  uint64 user_stack = (uint64)alloc_page();       //phisical address of user stack bottom
+  current->trapframe->regs.sp = USER_STACK_TOP;  //virtual address of user stack top
+
+  // allocates a page to record memory regions (segments)
+  current->mapped_info = (mapped_region*)alloc_page();
+  memset( current->mapped_info, 0, PGSIZE );
+
+  // map user stack in userspace
+  user_vm_map((pagetable_t)current->pagetable, USER_STACK_TOP - PGSIZE, PGSIZE,
+    user_stack, prot_to_type(PROT_WRITE | PROT_READ, 1));
+  current->mapped_info[0].va = USER_STACK_TOP - PGSIZE;
+  current->mapped_info[0].npages = 1;
+  current->mapped_info[0].seg_type = STACK_SEGMENT;
+
+  // map trapframe in user space (direct mapping as in kernel space).
+  user_vm_map((pagetable_t)current->pagetable, (uint64)current->trapframe, PGSIZE,
+    (uint64)current->trapframe, prot_to_type(PROT_WRITE | PROT_READ, 0));
+  current->mapped_info[1].va = (uint64)current->trapframe;
+  current->mapped_info[1].npages = 1;
+  current->mapped_info[1].seg_type = CONTEXT_SEGMENT;
+
+  // map S-mode trap vector section in user space (direct mapping as in kernel space)
+  // we assume that the size of usertrap.S is smaller than a page.
+  user_vm_map((pagetable_t)current->pagetable, (uint64)trap_sec_start, PGSIZE,
+    (uint64)trap_sec_start, prot_to_type(PROT_READ | PROT_EXEC, 0));
+  current->mapped_info[2].va = (uint64)trap_sec_start;
+  current->mapped_info[2].npages = 1;
+  current->mapped_info[2].seg_type = SYSTEM_SEGMENT;
+
+  current->total_mapped_region = 3;
+
+
+  
+
+
+
+
   /* load program header */
   elf_prog_header ph;
   int i,off;

@@ -146,6 +146,10 @@ void load_bincode_from_host_elf(process *p) {
   // elf_info is defined above, used to tie the elf file and its corresponding process.
   elf_info info;
 
+
+  // char exec_name[100]="hostfs_root";
+  // strcpy(exec_name+strlen(exec_name),arg_bug_msg.argv[0]);
+  // info.f = spike_file_open(exec_name, O_RDONLY, 0);
   info.f = spike_file_open(arg_bug_msg.argv[0], O_RDONLY, 0);
   info.p = p;
   // IS_ERR_VALUE is a macro defined in spike_interface/spike_htif.h
