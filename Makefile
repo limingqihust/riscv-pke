@@ -6,6 +6,7 @@
 
 # ---------------------	macros --------------------------
 CROSS_PREFIX 	:= riscv64-unknown-elf-
+# CROSS_PREFIX    := riscv64-linux-gnu-
 CC 				:= $(CROSS_PREFIX)gcc
 AR 				:= $(CROSS_PREFIX)ar
 RANLIB        	:= $(CROSS_PREFIX)ranlib

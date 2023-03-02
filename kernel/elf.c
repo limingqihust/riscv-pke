@@ -10,16 +10,12 @@
 #include "pmm.h"
 #include "spike_interface/spike_utils.h"
 
-typedef struct elf_info_t {
-  spike_file_t *f;
-  process *p;
-} elf_info;
 
 //
 // the implementation of allocater. allocates memory space for later segment loading.
 // this allocater is heavily modified @lab2_1, where we do NOT work in bare mode.
 //
-static void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size) {
+void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size) {
   elf_info *msg = (elf_info *)ctx->info;
   // we assume that size of proram segment is smaller than a page.
   kassert(size < PGSIZE);
@@ -36,7 +32,7 @@ static void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 siz
 //
 // actual file reading, using the spike file interface.
 //
-static uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {
+uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {
   elf_info *msg = (elf_info *)ctx->info;
   // call spike file utility to load the content of elf file into memory.
   // spike_file_pread will read the elf file (msg->f) from offset to memory (indicated by
@@ -158,7 +154,6 @@ void load_bincode_from_host_elf(process *p) {
   // init elfloader context. elf_init() is defined above.
   if (elf_init(&elfloader, &info) != EL_OK)
     panic("fail to init elfloader.\n");
-
   // load elf. elf_load() is defined above.
   if (elf_load(&elfloader) != EL_OK) panic("Fail on loading elf.\n");
 

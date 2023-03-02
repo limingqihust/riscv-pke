@@ -14,6 +14,7 @@
 #include "vmm.h"
 #include "sched.h"
 #include "proc_file.h"
+#include "elf.h"
 
 #include "spike_interface/spike_utils.h"
 
@@ -214,37 +215,75 @@ ssize_t sys_user_unlink(char * vfn){
 
 ssize_t sys_user_exec(char* vfn){
   char * pfn = (char*)user_va_to_pa((pagetable_t)(current->pagetable), (void*)vfn);
-  sprint("Application: %s\n",pfn);
 
-  // elf_ctx elfloader;
-  // elf_info info;
-  // info.f = spike_file_open(pfn, O_RDONLY, 0);
-  // if(elf_init(&elfloader, &info)!=EL_OK)
-  //   panic("elf init error\n");
+  elf_ctx elfloader;
+  elf_info info;
+
+  info.f = spike_file_open("hostfs_root/bin/app_ls", O_RDONLY, 0);
+  info.p=alloc_process();
+  /* load elf header */
+  if(elf_init(&elfloader, &info)!=EL_OK)
+    panic("elf init error\n");
+
+  /* empty the CODE_SEGMENT,DATA_SEGMENT of the current process*/
+  int cnt=0;
+  for(int i=0;i<current->total_mapped_region;i++)
+  {
+    if(current->mapped_info[i].seg_type==CODE_SEGMENT ||
+      current->mapped_info[i].seg_type==DATA_SEGMENT)
+    {
+      current->mapped_info[i].seg_type=-1;
+    }
+  }
+  /* load program header */
+  elf_prog_header ph;
+  int i,off;
+  for(i=0,off=elfloader.ehdr.phoff;i<elfloader.ehdr.phnum;i++,off+=sizeof(elf_prog_header))
+  {
+    /* load prog header */
+    if(elf_fpread(&elfloader,(void*)&ph,sizeof(elf_prog_header),off)!=sizeof(elf_prog_header))
+      panic("load prog header into elfloader fail\n");
+    if(ph.type!=ELF_PROG_LOAD)
+      panic("prog_header type error\n");
+    if (ph.memsz < ph.filesz) 
+      panic("prog_header memsz or fileze error\n");
+    if(ph.vaddr+ph.memsz<ph.vaddr)
+      panic("prog_header vaddr or memsz error\n");
+    // allocate memory block before elf loading
+    void *dest = elf_alloc_mb(&elfloader, ph.vaddr, ph.vaddr, ph.memsz);
+    // actual loading
+    if (elf_fpread(&elfloader, dest, ph.memsz, ph.off) != ph.memsz)
+      panic("load prog segment error\n");
+
+
+    // record the vm region in proc->mapped_info. added @lab3_1
+    int j;
+
+    /* find a empty mapped_region */
+    for( j=0; j<PGSIZE/sizeof(mapped_region); j++ ) //seek the last mapped region
+      if( (process*)(((elf_info*)(elfloader.info))->p)->mapped_info[j].va == 0x0 ) break;
+
+    ((process*)(((elf_info*)(elfloader.info))->p))->mapped_info[j].va = ph.vaddr;
+    ((process*)(((elf_info*)(elfloader.info))->p))->mapped_info[j].npages = 1;
+
+    // SEGMENT_READABLE, SEGMENT_EXECUTABLE, SEGMENT_WRITABLE are defined in kernel/elf.h
+    if( ph.flags == (SEGMENT_READABLE|SEGMENT_EXECUTABLE) ){
+      ((process*)(((elf_info*)(elfloader.info))->p))->mapped_info[j].seg_type = CODE_SEGMENT;
+      sprint( "CODE_SEGMENT added at mapped info offset:%d\n", j );
+    }else if ( ph.flags == (SEGMENT_READABLE|SEGMENT_WRITABLE) ){
+      ((process*)(((elf_info*)(elfloader.info))->p))->mapped_info[j].seg_type = DATA_SEGMENT;
+      sprint( "DATA_SEGMENT added at mapped info offset:%d\n", j );
+    }else
+      panic( "unknown program segment encountered, segment flag:%d.\n", ph.flags );
+
+    ((process*)(((elf_info*)(elfloader.info))->p))->total_mapped_region ++;
+
+ }  
   
-
-
-
-
-
-
-
-  // int code_segment_offset,data_segment_offset;
-  // sprint("CODE_SEGMENT added at mapped info offset:%d\n",code_segment_offset);
-  // sprint("DATA_SEGMENT added at mapped info offset:%d\n",data_segment_offset);
-  int fd=do_open(pfn, O_RDONLY);
-  struct file exec_file=current->pfiles->opened_files[fd];
-  int exec_size=exec_file.f_dentry->dentry_inode->size;
-  sprint("exec_size:%d\n",exec_size);
-  char exec_code[exec_size+1];
-  if(do_read(fd,exec_code,exec_size)!=exec_size)
-    panic("do_read fail\n");
-  // for(int i=0;i<exec_size;i++)
-  // {
-  //   sprint("%d ",(int)exec_code[i]);
-  // }
-  
-  panic("here\n");
+  /* change the return address to app_ls entry address */
+  free_process(current);
+  current=info.p;
+  current->trapframe->epc = elfloader.ehdr.entry;
   return 0;
 }
 
