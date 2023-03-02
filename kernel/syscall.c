@@ -220,7 +220,8 @@ ssize_t sys_user_exec(char* vfn){
   elf_info info;
 
   info.f = spike_file_open("hostfs_root/bin/app_ls", O_RDONLY, 0);
-  info.p=alloc_process();
+  // info.p=alloc_process();
+  info.p=current;
   /* load elf header */
   if(elf_init(&elfloader, &info)!=EL_OK)
     panic("elf init error\n");
@@ -281,8 +282,8 @@ ssize_t sys_user_exec(char* vfn){
  }  
   
   /* change the return address to app_ls entry address */
-  free_process(current);
-  current=info.p;
+  // free_process(current);
+  // current=info.p;
   current->trapframe->epc = elfloader.ehdr.entry;
   return 0;
 }
