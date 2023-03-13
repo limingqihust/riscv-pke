@@ -55,18 +55,26 @@ void load_user_program(process *proc) {
   sprint("user frame 0x%lx, user stack 0x%lx, user kstack 0x%lx \n", proc->trapframe,
          proc->trapframe->regs.sp, proc->kstack);
 
-	//申请一个page作为第一个free_mb
-	proc->malloced_mb=NULL;
-  void* pa = alloc_page();
-  uint64 va = g_ufree_page;
-  g_ufree_page += PGSIZE;
-  user_vm_map((pagetable_t)proc->pagetable, va, PGSIZE, (uint64)pa,
-        prot_to_type(PROT_WRITE | PROT_READ, 1));
-  proc->free_mb=(mem_block*)pa;
-  proc->free_mb->mb_start=va+sizeof(mem_block);
-  proc->free_mb->mb_size=PGSIZE-sizeof(mem_block);
-  proc->free_mb->mb_type=MB_FREE;
-  proc->free_mb->mb_nxt=NULL;
+  //申请一个page作为第一个free_mb
+//   proc->heap_head=NULL;
+  
+
+//   void* pa = alloc_page();
+//   uint64 va = g_ufree_page;
+//   g_ufree_page += PGSIZE;
+//   user_vm_map((pagetable_t)proc->pagetable, va, PGSIZE, (uint64)pa,
+//         prot_to_type(PROT_WRITE | PROT_READ, 1));
+  
+  // 初始化heap_head
+//   proc->heap_head=(mem_block*)pa;
+//   proc->heap_head->mb_start=USER_FREE_ADDRESS_START;
+//   proc->heap_head->mb_size=0;
+//   proc->heap_head->mb_type=MB_MALLOCED;
+//   proc->heap_head->mb_nxt=NULL;
+  // 初始化heap_off
+  proc->heap_off=USER_FREE_ADDRESS_START;
+  proc->head_head=NULL;
+
 
   // load_bincode_from_host_elf() is defined in kernel/elf.c
   load_bincode_from_host_elf(proc);
