@@ -1,0 +1,687 @@
+diff --git a/Makefile b/Makefile
+index 01b26d2..d9a40d1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -70,7 +70,7 @@ USER_OBJS  		:= $(addprefix $(OBJ_DIR)/, $(patsubst %.c,%.o,$(USER_CPPS)))
+ 
+ 
+ 
+-USER_TARGET 	:= $(OBJ_DIR)/app_sum_sequence
++USER_TARGET 	:= $(OBJ_DIR)/app_singlepageheap
+ #------------------------targets------------------------
+ $(OBJ_DIR):
+ 	@-mkdir -p $(OBJ_DIR)	
+diff --git a/answer.patch b/answer.patch
+new file mode 100644
+index 0000000..712a288
+--- /dev/null
++++ b/answer.patch
+@@ -0,0 +1,250 @@
++diff --git a/kernel/process.c b/kernel/process.c
++index b1f82ea..bc1f7b1 100644
++--- a/kernel/process.c
+++++ b/kernel/process.c
++@@ -27,6 +27,14 @@ process* current = NULL;
++ // start virtual address of our simple heap.
++ uint64 g_ufree_page = USER_FREE_ADDRESS_START;
++ 
+++int growprocess(uint64 n)
+++{
+++  uint64 sz = current->heap_sz;
+++  if(n < 0) panic("failed in growprocess .\n");
+++  user_vm_malloc(current->pagetable, sz, sz + n);
+++  current->heap_sz = sz + n;
+++  return 0;
+++}
++ //
++ // switch to a user-mode process
++ //
++diff --git a/kernel/process.h b/kernel/process.h
++index 8c07da4..0f10a52 100644
++--- a/kernel/process.h
+++++ b/kernel/process.h
++@@ -26,11 +26,15 @@ typedef struct process {
++   pagetable_t pagetable;
++   // trapframe storing the context of a (User mode) process.
++   trapframe* trapframe;
+++
+++  uint64 heap_sz;
+++  uint64 heap_memory_start;
+++  uint64 heap_memory_last;
++ }process;
++ 
++ // switch to run user app
++ void switch_to(process*);
++-
+++int growprocess(uint64 n);
++ // current running process
++ extern process* current;
++ // virtual address of our simple heap
++diff --git a/kernel/syscall.c b/kernel/syscall.c
++index f5d7fcd..bede312 100644
++--- a/kernel/syscall.c
+++++ b/kernel/syscall.c
++@@ -38,23 +38,26 @@ ssize_t sys_user_exit(uint64 code) {
++ }
++ 
++ //
++-// maybe, the simplest implementation of malloc in the world ...
+++// maybe, the implementation of malloc in the world ...
++ //
++-uint64 sys_user_allocate_page() {
++-  void* pa = alloc_page();
++-  uint64 va = g_ufree_page;
++-  g_ufree_page += PGSIZE;
++-  user_vm_map((pagetable_t)current->pagetable, va, PGSIZE, (uint64)pa,
++-         prot_to_type(PROT_WRITE | PROT_READ, 1));
++-
++-  return va;
+++uint64 sys_user_allocate_page(uint64 n) {
+++  uint64 addr = malloc((int)n);
+++  return addr;
+++}
+++//
+++// allocate n bytes. 
+++//
+++uint64 sys_user_sbrk(uint64 n)
+++{
+++  uint64 addr = current->heap_sz;
+++  growprocess(n);
+++  return addr;
++ }
++-
++ //
++-// reclaim a page, indicated by "va".
+++// free into the pull.
++ //
++ uint64 sys_user_free_page(uint64 va) {
++-  user_vm_unmap((pagetable_t)current->pagetable, va, PGSIZE, 1);
+++  free((void *)va);
++   return 0;
++ }
++ 
++@@ -69,7 +72,7 @@ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, l
++     case SYS_user_exit:
++       return sys_user_exit(a1);
++     case SYS_user_allocate_page:
++-      return sys_user_allocate_page();
+++      return sys_user_allocate_page(a1);
++     case SYS_user_free_page:
++       return sys_user_free_page(a1);
++     default:
++diff --git a/kernel/syscall.h b/kernel/syscall.h
++index a10810b..6f32336 100644
++--- a/kernel/syscall.h
+++++ b/kernel/syscall.h
++@@ -10,7 +10,8 @@
++ #define SYS_user_exit (SYS_user_base + 1)
++ #define SYS_user_allocate_page (SYS_user_base + 2)
++ #define SYS_user_free_page (SYS_user_base + 3)
++-
+++#define SYS_user_sbrk (SYS_user_base + 4)
+++uint64 sys_user_sbrk(uint64 n);
++ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, long a7);
++ 
++ #endif
++diff --git a/kernel/vmm.c b/kernel/vmm.c
++index 2f83d63..8d9f800 100644
++--- a/kernel/vmm.c
+++++ b/kernel/vmm.c
++@@ -5,12 +5,14 @@
++ #include "vmm.h"
++ #include "riscv.h"
++ #include "pmm.h"
+++#include "process.h"
++ #include "util/types.h"
++ #include "memlayout.h"
++ #include "util/string.h"
++ #include "spike_interface/spike_utils.h"
++ #include "util/functions.h"
++-
+++int init_flag = 0;
++ /* --- utility functions for virtual address mapping --- */
++ //
++ // establish mapping of virtual address [va, va+size] to phyiscal address [pa, pa+size]
++@@ -165,7 +167,26 @@ void *user_va_to_pa(pagetable_t page_dir, void *va) {
++     return (void *)(page_addr + ((uint64)va & ((1 << PGSHIFT) - 1)));
++ 
++ }
++-
+++//
+++// Allocate PTEs and physical memory to grow process from oldsz to
+++// newsz, which need not be page aligned.  Returns new size or 0 on error.
+++//
+++uint64 user_vm_malloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz)
+++{
+++  char *mem;
+++  if(oldsz > newsz)
+++    return oldsz;
+++  oldsz = PGROUNDUP(oldsz);
+++  for(uint64 old = oldsz; old < newsz; old += PGSIZE)
+++  {
+++    mem = (char *)alloc_page();
+++    if(mem == 0)
+++      panic("failed to user_vm_malloc .\n");
+++    memset(mem,0,sizeof(uint8) * PGSIZE);
+++    map_pages(pagetable, oldsz, PGSIZE, (uint64)mem, prot_to_type(PROT_READ | PROT_WRITE,1) );
+++  }
+++  return newsz;
+++}
++ //
++ // maps virtual address [va, va+sz] to [pa, pa+sz] (for user application).
++ //
++@@ -203,3 +224,69 @@ void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free) {
++      *pte = 0;
++   }
++ }
+++
+++//
+++// malloc n bytes for user.
+++//
+++uint64 malloc(int n)
+++{
+++    if(init_flag == 0)
+++    {
+++      current->heap_sz = USER_FREE_ADDRESS_START;
+++      uint64 addr = current->heap_sz;
+++      growprocess(sizeof(mem_control_block));
+++      pte_t *pte = page_walk(current->pagetable, addr, 0);
+++      mem_control_block *first_control_block = (mem_control_block *) PTE2PA(*pte);
+++      current->heap_memory_start = (uint64) first_control_block;
+++      first_control_block->next = first_control_block;
+++      first_control_block->size = 0;
+++      current->heap_memory_last = (uint64)first_control_block;
+++      init_flag = 1;
+++    }
+++    mem_control_block *head = (mem_control_block *)current->heap_memory_start;
+++    mem_control_block *last = (mem_control_block *)current->heap_memory_last;
+++    
+++    while (1)
+++    {
+++        if(head->size >= n && head->is_available == 1)
+++        {
+++            
+++            head->is_available = 0;
+++            return head->offset + sizeof(mem_control_block);
+++        }
+++        if(head->next == last) break;
+++        head = head->next;
+++    }
+++   uint64 alloacte_addr = current->heap_sz;
+++   growprocess((uint64) (sizeof(mem_control_block) + n + 8));
+++   pte_t *pte = page_walk(current->pagetable, alloacte_addr, 0);
+++   mem_control_block *now = (mem_control_block *)(PTE2PA(*pte) + (alloacte_addr & 0xfff));
+++   uint64 amo = (8 - ((uint64)now % 8))%8;
+++   now = (mem_control_block *)((uint64)now + amo);
+++
+++   now->is_available = 0;
+++   now->offset = alloacte_addr;
+++   now->size = n;
+++   now->next = head->next;
+++   
+++   head->next = now;
+++   head = (mem_control_block *)current->heap_memory_start;
+++//   current->heap_memory_last = (uint64)now;
+++   return alloacte_addr + sizeof(mem_control_block);
+++    
+++}
+++
+++//
+++// free the allocated memory into pool.
+++//
+++void free(void *firstaddr)
+++{
+++    firstaddr = (void *)((uint64)firstaddr - sizeof(mem_control_block));
+++    pte_t *pte = page_walk(current->pagetable, (uint64)(firstaddr), 0);
+++    mem_control_block *now = (mem_control_block *)(PTE2PA(*pte) + ((uint64)firstaddr & 0xfff));
+++    uint64 amo = (8 - ((uint64)now % 8))%8;
+++   now = (mem_control_block *)((uint64)now + amo);
+++    if(now->is_available == 1)
+++        panic("in free function, the memory has been freed before! \n");
+++    now->is_available = 1;
+++}
++\ No newline at end of file
++diff --git a/kernel/vmm.h b/kernel/vmm.h
++index b5bd916..7fd746d 100644
++--- a/kernel/vmm.h
+++++ b/kernel/vmm.h
++@@ -30,5 +30,20 @@ void kern_vm_init(void);
++ void *user_va_to_pa(pagetable_t page_dir, void *va);
++ void user_vm_map(pagetable_t page_dir, uint64 va, uint64 size, uint64 pa, int perm);
++ void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free);
++-
+++uint64 user_vm_malloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz);
+++
+++/* --- malloc --- */
+++//
+++// user memory control block.
+++// is_available: 1 for usable, 0 for unusable.
+++// size: this block size.
+++//
+++typedef struct mem_control_block{
+++    int is_available;
+++    int size;
+++    uint64 offset;
+++    struct mem_control_block *next;
+++}mem_control_block;
+++uint64 malloc(int n);
+++void free(void *firstaddr);
++ #endif
+diff --git a/kernel/kernel.c b/kernel/kernel.c
+index 667988e..7be2b70 100644
+--- a/kernel/kernel.c
++++ b/kernel/kernel.c
+@@ -9,6 +9,7 @@
+ #include "pmm.h"
+ #include "vmm.h"
+ #include "memlayout.h"
++#include "syscall.h"
+ #include "spike_interface/spike_utils.h"
+ 
+ process user_app;
+@@ -87,6 +88,7 @@ int s_start(void) {
+ 
+   // the application code (elf) is first loaded into memory, and then put into execution
+   load_user_program(&user_app);
++  current = &user_app;
+ 
+   sprint("Switch to user mode...\n");
+   switch_to(&user_app);
+diff --git a/kernel/process.c b/kernel/process.c
+index b1f82ea..bc1f7b1 100644
+--- a/kernel/process.c
++++ b/kernel/process.c
+@@ -27,6 +27,14 @@ process* current = NULL;
+ // start virtual address of our simple heap.
+ uint64 g_ufree_page = USER_FREE_ADDRESS_START;
+ 
++int growprocess(uint64 n)
++{
++  uint64 sz = current->heap_sz;
++  if(n < 0) panic("failed in growprocess .\n");
++  user_vm_malloc(current->pagetable, sz, sz + n);
++  current->heap_sz = sz + n;
++  return 0;
++}
+ //
+ // switch to a user-mode process
+ //
+diff --git a/kernel/process.h b/kernel/process.h
+index 8c07da4..0f10a52 100644
+--- a/kernel/process.h
++++ b/kernel/process.h
+@@ -26,11 +26,15 @@ typedef struct process {
+   pagetable_t pagetable;
+   // trapframe storing the context of a (User mode) process.
+   trapframe* trapframe;
++
++  uint64 heap_sz;
++  uint64 heap_memory_start;
++  uint64 heap_memory_last;
+ }process;
+ 
+ // switch to run user app
+ void switch_to(process*);
+-
++int growprocess(uint64 n);
+ // current running process
+ extern process* current;
+ // virtual address of our simple heap
+diff --git a/kernel/riscv.h b/kernel/riscv.h
+index 29711d9..aa486ad 100644
+--- a/kernel/riscv.h
++++ b/kernel/riscv.h
+@@ -4,6 +4,9 @@
+ #include "util/types.h"
+ #include "config.h"
+ 
++#define PGROUNDUP(sz)  (((sz)+PGSIZE-1) & ~(PGSIZE-1))
++#define PGROUNDDOWN(a) (((a)) & ~(PGSIZE-1))
++
+ // fields of mstatus, the Machine mode Status register
+ #define MSTATUS_MPP_MASK (3L << 11) // previous mode mask
+ #define MSTATUS_MPP_M (3L << 11)    // machine mode (m-mode)
+diff --git a/kernel/strap.c b/kernel/strap.c
+index 500dafb..b4bb4d6 100644
+--- a/kernel/strap.c
++++ b/kernel/strap.c
+@@ -60,7 +60,7 @@ void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {
+         user_vm_map((pagetable_t)current->pagetable, ROUNDDOWN(stval, PGSIZE), PGSIZE, newpage,
+         prot_to_type(PROT_WRITE | PROT_READ, 1));
+       }
+-      
++
+       break;
+     default:
+       sprint("unknown page fault.\n");
+diff --git a/kernel/syscall.c b/kernel/syscall.c
+index f5d7fcd..bede312 100644
+--- a/kernel/syscall.c
++++ b/kernel/syscall.c
+@@ -38,23 +38,26 @@ ssize_t sys_user_exit(uint64 code) {
+ }
+ 
+ //
+-// maybe, the simplest implementation of malloc in the world ...
++// maybe, the implementation of malloc in the world ...
+ //
+-uint64 sys_user_allocate_page() {
+-  void* pa = alloc_page();
+-  uint64 va = g_ufree_page;
+-  g_ufree_page += PGSIZE;
+-  user_vm_map((pagetable_t)current->pagetable, va, PGSIZE, (uint64)pa,
+-         prot_to_type(PROT_WRITE | PROT_READ, 1));
+-
+-  return va;
++uint64 sys_user_allocate_page(uint64 n) {
++  uint64 addr = malloc((int)n);
++  return addr;
++}
++//
++// allocate n bytes. 
++//
++uint64 sys_user_sbrk(uint64 n)
++{
++  uint64 addr = current->heap_sz;
++  growprocess(n);
++  return addr;
+ }
+-
+ //
+-// reclaim a page, indicated by "va".
++// free into the pull.
+ //
+ uint64 sys_user_free_page(uint64 va) {
+-  user_vm_unmap((pagetable_t)current->pagetable, va, PGSIZE, 1);
++  free((void *)va);
+   return 0;
+ }
+ 
+@@ -69,7 +72,7 @@ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, l
+     case SYS_user_exit:
+       return sys_user_exit(a1);
+     case SYS_user_allocate_page:
+-      return sys_user_allocate_page();
++      return sys_user_allocate_page(a1);
+     case SYS_user_free_page:
+       return sys_user_free_page(a1);
+     default:
+diff --git a/kernel/syscall.h b/kernel/syscall.h
+index a10810b..6f32336 100644
+--- a/kernel/syscall.h
++++ b/kernel/syscall.h
+@@ -10,7 +10,8 @@
+ #define SYS_user_exit (SYS_user_base + 1)
+ #define SYS_user_allocate_page (SYS_user_base + 2)
+ #define SYS_user_free_page (SYS_user_base + 3)
+-
++#define SYS_user_sbrk (SYS_user_base + 4)
++uint64 sys_user_sbrk(uint64 n);
+ long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, long a7);
+ 
+ #endif
+diff --git a/kernel/vmm.c b/kernel/vmm.c
+index 2f83d63..dbbdee7 100644
+--- a/kernel/vmm.c
++++ b/kernel/vmm.c
+@@ -5,12 +5,14 @@
+ #include "vmm.h"
+ #include "riscv.h"
+ #include "pmm.h"
++#include "process.h"
+ #include "util/types.h"
+ #include "memlayout.h"
+ #include "util/string.h"
+ #include "spike_interface/spike_utils.h"
+ #include "util/functions.h"
+-
++#include "syscall.h"
++int init_flag = 0;
+ /* --- utility functions for virtual address mapping --- */
+ //
+ // establish mapping of virtual address [va, va+size] to phyiscal address [pa, pa+size]
+@@ -165,7 +167,26 @@ void *user_va_to_pa(pagetable_t page_dir, void *va) {
+     return (void *)(page_addr + ((uint64)va & ((1 << PGSHIFT) - 1)));
+ 
+ }
+-
++//
++// Allocate PTEs and physical memory to grow process from oldsz to
++// newsz, which need not be page aligned.  Returns new size or 0 on error.
++//
++uint64 user_vm_malloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz)
++{
++  char *mem;
++  if(oldsz > newsz)
++    return oldsz;
++  oldsz = PGROUNDUP(oldsz);
++  for(uint64 old = oldsz; old < newsz; old += PGSIZE)
++  {
++    mem = (char *)alloc_page();
++    if(mem == 0)
++      panic("failed to user_vm_malloc .\n");
++    memset(mem,0,sizeof(uint8) * PGSIZE);
++    map_pages(pagetable, oldsz, PGSIZE, (uint64)mem, prot_to_type(PROT_READ | PROT_WRITE,1) );
++  }
++  return newsz;
++}
+ //
+ // maps virtual address [va, va+sz] to [pa, pa+sz] (for user application).
+ //
+@@ -203,3 +224,70 @@ void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free) {
+      *pte = 0;
+   }
+ }
++
++//
++// malloc n bytes for user.
++//
++uint64 malloc(int n)
++{
++    if(init_flag == 0)
++    {
++      
++      current->heap_sz = USER_FREE_ADDRESS_START;
++      uint64 addr = current->heap_sz;
++      growprocess(sizeof(mem_control_block));
++      pte_t *pte = page_walk(current->pagetable, addr, 0);
++      mem_control_block *first_control_block = (mem_control_block *) PTE2PA(*pte);
++      current->heap_memory_start = (uint64) first_control_block;
++      first_control_block->next = first_control_block;
++      first_control_block->size = 0;
++      current->heap_memory_last = (uint64)first_control_block;
++      init_flag = 1;
++    }
++    mem_control_block *head = (mem_control_block *)current->heap_memory_start;
++    mem_control_block *last = (mem_control_block *)current->heap_memory_last;
++    
++    while (1)
++    {
++        if(head->size >= n && head->is_available == 1)
++        {
++            
++            head->is_available = 0;
++            return head->offset + sizeof(mem_control_block);
++        }
++        if(head->next == last) break;
++        head = head->next;
++    }
++   uint64 alloacte_addr = current->heap_sz;
++   growprocess((uint64) (sizeof(mem_control_block) + n + 8));
++   pte_t *pte = page_walk(current->pagetable, alloacte_addr, 0);
++   mem_control_block *now = (mem_control_block *)(PTE2PA(*pte) + (alloacte_addr & 0xfff));
++   uint64 amo = (8 - ((uint64)now % 8))%8;
++   now = (mem_control_block *)((uint64)now + amo);
++
++   now->is_available = 0;
++   now->offset = alloacte_addr;
++   now->size = n;
++   now->next = head->next;
++   
++   head->next = now;
++   head = (mem_control_block *)current->heap_memory_start;
++//   current->heap_memory_last = (uint64)now;
++   return alloacte_addr + sizeof(mem_control_block);
++    
++}
++
++//
++// free the allocated memory into pool.
++//
++void free(void *firstaddr)
++{
++    firstaddr = (void *)((uint64)firstaddr - sizeof(mem_control_block));
++    pte_t *pte = page_walk(current->pagetable, (uint64)(firstaddr), 0);
++    mem_control_block *now = (mem_control_block *)(PTE2PA(*pte) + ((uint64)firstaddr & 0xfff));
++    uint64 amo = (8 - ((uint64)now % 8))%8;
++   now = (mem_control_block *)((uint64)now + amo);
++    if(now->is_available == 1)
++        panic("in free function, the memory has been freed before! \n");
++    now->is_available = 1;
++}
+\ No newline at end of file
+diff --git a/kernel/vmm.h b/kernel/vmm.h
+index b5bd916..7fd746d 100644
+--- a/kernel/vmm.h
++++ b/kernel/vmm.h
+@@ -30,5 +30,20 @@ void kern_vm_init(void);
+ void *user_va_to_pa(pagetable_t page_dir, void *va);
+ void user_vm_map(pagetable_t page_dir, uint64 va, uint64 size, uint64 pa, int perm);
+ void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free);
+-
++uint64 user_vm_malloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz);
++
++/* --- malloc --- */
++//
++// user memory control block.
++// is_available: 1 for usable, 0 for unusable.
++// size: this block size.
++//
++typedef struct mem_control_block{
++    int is_available;
++    int size;
++    uint64 offset;
++    struct mem_control_block *next;
++}mem_control_block;
++uint64 malloc(int n);
++void free(void *firstaddr);
+ #endif
+diff --git a/user/app_singlepageheap.c b/user/app_singlepageheap.c
+new file mode 100644
+index 0000000..0b6e1ca
+--- /dev/null
++++ b/user/app_singlepageheap.c
+@@ -0,0 +1,34 @@
++/*
++ * Below is the given application for lab2_challenge2_singlepageheap.
++ * This app performs malloc memory.
++ */
++
++#include "user_lib.h"
++#include "util/types.h"
++#include "util/string.h"
++int main(void) {
++  
++  char str[20] = "hello world.";
++  char *m = (char *)better_malloc(100);
++  char *p = (char *)better_malloc(50);
++  if((uint64)p - (uint64)m > 512 ){
++    printu("you need to manage the vm space precisely!");
++    exit(-1);
++  }
++  better_free((void *)m);
++
++  strcpy(p,str);
++  printu("%s\n",p);
++  char *n = (char *)better_malloc(50);
++  
++  if(m != n)
++  {
++    printu("your malloc is not complete.\n");
++    exit(-1);
++  }
++  else{
++    printu("0x%lx 0x%lx\n", m, n);
++  }
++  exit(0);
++  return 0;
++}
+diff --git a/user/app_sum_sequence.c b/user/app_sum_sequence.c
+deleted file mode 100644
+index 809d341..0000000
+--- a/user/app_sum_sequence.c
++++ /dev/null
+@@ -1,28 +0,0 @@
+-/*
+- * The application of lab2_3.
+- */
+-
+-#include "user_lib.h"
+-#include "util/types.h"
+-
+-//
+-// compute the summation of an arithmetic sequence. for a given "n", compute
+-// result = n + (n-1) + (n-2) + ... + 0
+-// sum_sequence() calls itself recursively till 0. The recursive call, however,
+-// may consume more memory (from stack) than a physical 4KB page, leading to a page fault.
+-// PKE kernel needs to improved to handle such page fault by expanding the stack.
+-//
+-uint64 sum_sequence(uint64 n) {
+-  if (n == 0)
+-    return 0;
+-  else
+-    return sum_sequence( n-1 ) + n;
+-}
+-
+-int main(void) {
+-  // we need a large enough "n" to trigger pagefaults in the user stack
+-  uint64 n = 1000;
+-
+-  printu("Summation of an arithmetic sequence from 0 to %ld is: %ld \n", n, sum_sequence(1000) );
+-  exit(0);
+-}
+diff --git a/user/user_lib.c b/user/user_lib.c
+index 819e5ea..60c0671 100644
+--- a/user/user_lib.c
++++ b/user/user_lib.c
+@@ -53,13 +53,19 @@ int exit(int code) {
+ //
+ // lib call to naive_malloc
+ //
+-void* naive_malloc() {
+-  return (void*)do_user_call(SYS_user_allocate_page, 0, 0, 0, 0, 0, 0, 0);
++void* better_malloc(int n) {
++  return (void*)do_user_call(SYS_user_allocate_page, n, 0, 0, 0, 0, 0, 0);
+ }
+ 
+ //
+ // lib call to naive_free
+ //
+-void naive_free(void* va) {
++void better_free(void* va) {
+   do_user_call(SYS_user_free_page, (uint64)va, 0, 0, 0, 0, 0, 0);
+ }
++//
++// lib cal to naive_sbrk
++//
++uint64 naive_sbrk(uint64 n){
++  return do_user_call(SYS_user_sbrk, (uint64)n, 0, 0, 0, 0, 0, 0);
++}
+\ No newline at end of file
+diff --git a/user/user_lib.h b/user/user_lib.h
+index c1a0bec..477949a 100644
+--- a/user/user_lib.h
++++ b/user/user_lib.h
+@@ -1,8 +1,9 @@
+ /*
+  * header file to be used by applications.
+  */
+-
++typedef unsigned long long uint64;
+ int printu(const char *s, ...);
+ int exit(int code);
+-void* naive_malloc();
+-void naive_free(void* va);
++void* better_malloc();
++void better_free(void* va);
++uint64 naive_sbrk(uint64 n);
