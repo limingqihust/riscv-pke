@@ -224,30 +224,30 @@ ssize_t sys_user_exec(char* vfn){
   elf_ctx elfloader;
   elf_info info;
 
-  // char exec_name[100]="hostfs_root";
-  // strcpy(exec_name+strlen(exec_name),pfn);
+  char exec_name[100]="hostfs_root";
+  strcpy(exec_name+strlen(exec_name),pfn);
   info.f=spike_file_open(exec_name,O_RDONLY,0);
   // info.f=spike_file_open(pfn,O_RDONLY,0);
-  
+
   info.p=current;
   /* load elf header */
   if(elf_init(&elfloader, &info)!=EL_OK)
     panic("elf init error\n");
-  
+
+
+
+
   /* empty vm space */
-  current->trapframe = (trapframe *)alloc_page();  //trapframe, used to save context
   memset(current->trapframe, 0, sizeof(trapframe));
 
   /* empty page directory */
-  current->pagetable = (pagetable_t)alloc_page();
   memset((void *)current->pagetable, 0, PGSIZE);
-
+  
   current->kstack = (uint64)alloc_page() + PGSIZE;   //user kernel stack top
   uint64 user_stack = (uint64)alloc_page();       //phisical address of user stack bottom
   current->trapframe->regs.sp = USER_STACK_TOP;  //virtual address of user stack top
 
   // allocates a page to record memory regions (segments)
-  current->mapped_info = (mapped_region*)alloc_page();
   memset( current->mapped_info, 0, PGSIZE );
 
   // map user stack in userspace
@@ -273,11 +273,6 @@ ssize_t sys_user_exec(char* vfn){
   current->mapped_info[2].seg_type = SYSTEM_SEGMENT;
 
   current->total_mapped_region = 3;
-
-
-  
-
-
 
 
   /* load program header */
