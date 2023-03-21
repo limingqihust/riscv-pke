@@ -11,6 +11,7 @@ int main(void) {
   // we are now in U(user)-mode, but the "csrc" instruction requires M-mode privilege.
   // Attempting to execute such instruction will raise illegal instruction exception.
 
+
   printu("line 14\n");
   printu("line 15\n");
   printu("line 16\n");
