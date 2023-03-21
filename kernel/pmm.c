@@ -36,8 +36,12 @@ static void create_freepage_list(uint64 start, uint64 end) {
 // place a physical page at *pa to the free list of g_free_mem_list (to reclaim the page)
 //
 void free_page(void *pa) {
+
   if (((uint64)pa % PGSIZE) != 0 || (uint64)pa < free_mem_start_addr || (uint64)pa >= free_mem_end_addr)
-    panic("free_page 0x%lx \n", pa);
+  {
+    sprint("free_page 0x%lx", pa);
+    panic("\n");
+  }
 
   // insert a physical page to g_free_mem_list
   list_node *n = (list_node *)pa;
@@ -85,4 +89,16 @@ void pmm_init() {
   sprint("kernel memory manager is initializing ...\n");
   // create the list of free pages
   create_freepage_list(free_mem_start_addr, free_mem_end_addr);
+}
+
+
+void print_free_page()
+{
+  list_node p=g_free_mem_list;
+  for(int i=0;i<10;i++)
+  {
+    list_node *n = p.next;
+    if (n) p.next = n->next;
+    sprint("%llx\n",(uint64)n);
+  }
 }

@@ -1,0 +1,3 @@
+D:/risc-v/riscv-pke/cmake-build-debug/CMakeFiles/riscv_pke.dir
+D:/risc-v/riscv-pke/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/risc-v/riscv-pke/cmake-build-debug/CMakeFiles/rebuild_cache.dir

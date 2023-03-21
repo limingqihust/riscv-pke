@@ -71,11 +71,11 @@ USER_OBJS  		:= $(addprefix $(OBJ_DIR)/, $(patsubst %.c,%.o,$(USER_CPPS)))
 
 USER_TARGET 	:= $(HOSTFS_ROOT)/bin/app_exec
 
-USER_E_CPPS 		:= user/app_ls.c user/user_lib.c
+USER_E_CPPS 		:= user/app_read.c user/user_lib.c
 
 USER_E_OBJS  		:= $(addprefix $(OBJ_DIR)/, $(patsubst %.c,%.o,$(USER_E_CPPS)))
 
-USER_E_TARGET 	:= $(HOSTFS_ROOT)/bin/app_ls
+USER_E_TARGET 	:= $(HOSTFS_ROOT)/bin/app_read
 #------------------------targets------------------------
 $(OBJ_DIR):
 	@-mkdir -p $(OBJ_DIR)	
