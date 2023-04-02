@@ -1,0 +1,957 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+.DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := $(all)$/;"	m
+AR	Makefile	/^AR 				:= $(CROSS_PREFIX)ar$/;"	m
+ARRAY_SIZE	util/functions.h	12;"	d
+AT_FDCWD	spike_interface/spike_htif.h	92;"	d
+BLOCKED	kernel/process.h	/^  BLOCKED,         \/\/ waiting for something$/;"	e	enum:proc_status
+CAUSE_BREAKPOINT	kernel/riscv.h	43;"	d
+CAUSE_FETCH_ACCESS	kernel/riscv.h	41;"	d
+CAUSE_FETCH_PAGE_FAULT	kernel/riscv.h	51;"	d
+CAUSE_ILLEGAL_INSTRUCTION	kernel/riscv.h	42;"	d
+CAUSE_LOAD_ACCESS	kernel/riscv.h	45;"	d
+CAUSE_LOAD_PAGE_FAULT	kernel/riscv.h	52;"	d
+CAUSE_MACHINE_ECALL	kernel/riscv.h	50;"	d
+CAUSE_MISALIGNED_FETCH	kernel/riscv.h	40;"	d
+CAUSE_MISALIGNED_LOAD	kernel/riscv.h	44;"	d
+CAUSE_MISALIGNED_STORE	kernel/riscv.h	46;"	d
+CAUSE_MTIMER	kernel/riscv.h	56;"	d
+CAUSE_MTIMER_S_TRAP	kernel/riscv.h	57;"	d
+CAUSE_STORE_ACCESS	kernel/riscv.h	47;"	d
+CAUSE_STORE_PAGE_FAULT	kernel/riscv.h	53;"	d
+CAUSE_SUPERVISOR_ECALL	kernel/riscv.h	49;"	d
+CAUSE_USER_ECALL	kernel/riscv.h	48;"	d
+CC	Makefile	/^CC 				:= $(CROSS_PREFIX)gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS        := -Wall -Werror  -fno-builtin -nostdlib -D__NO_INLINE__ -mcmodel=medany -g -Og -std=gnu99 -Wno-unused -Wno-attributes -fno-delete-null-pointer-checks -fno-PIE $(march)$/;"	m
+CLINT	kernel/riscv.h	63;"	d
+CLINT_MTIME	kernel/riscv.h	65;"	d
+CLINT_MTIMECMP	kernel/riscv.h	64;"	d
+CODE_SEGMENT	kernel/process.h	/^  CODE_SEGMENT,    \/\/ ELF segment$/;"	e	enum:segment_type
+COMPILE	Makefile	/^COMPILE       	:= $(CC) -MMD -MP $(CFLAGS) $(SPROJS_INCLUDE)$/;"	m
+CONTEXT_SEGMENT	kernel/process.h	/^  CONTEXT_SEGMENT, \/\/ trapframe segment$/;"	e	enum:segment_type
+CROSS_PREFIX	Makefile	/^CROSS_PREFIX 	:= riscv64-unknown-elf-$/;"	m
+DATA_SEGMENT	kernel/process.h	/^  DATA_SEGMENT,    \/\/ ELF segment$/;"	e	enum:segment_type
+DIRECT_BLKNUM	kernel/vfs.h	14;"	d
+DIR_I	util/types.h	31;"	d
+DRAM_BASE	kernel/memlayout.h	6;"	d
+ELF_MAGIC	kernel/elf.h	45;"	d
+ELF_PROG_LOAD	kernel/elf.h	46;"	d
+EL_EIO	kernel/elf.h	/^  EL_EIO,$/;"	e	enum:elf_status_t
+EL_ENOMEM	kernel/elf.h	/^  EL_ENOMEM,$/;"	e	enum:elf_status_t
+EL_ERR	kernel/elf.h	/^  EL_ERR,$/;"	e	enum:elf_status_t
+EL_NOTELF	kernel/elf.h	/^  EL_NOTELF,$/;"	e	enum:elf_status_t
+EL_OK	kernel/elf.h	/^  EL_OK = 0,$/;"	e	enum:elf_status_t
+ENOMEM	spike_interface/spike_file.h	19;"	d
+ERR_PTR	spike_interface/spike_htif.h	89;"	d
+FALSE	util/types.h	22;"	d
+FDT_BEGIN_NODE	spike_interface/dts_parse.h	22;"	d
+FDT_END	spike_interface/dts_parse.h	26;"	d
+FDT_END_NODE	spike_interface/dts_parse.h	23;"	d
+FDT_MAGIC	spike_interface/dts_parse.h	6;"	d
+FDT_NOP	spike_interface/dts_parse.h	25;"	d
+FDT_PROP	spike_interface/dts_parse.h	24;"	d
+FDT_VERSION	spike_interface/dts_parse.h	7;"	d
+FD_NONE	util/types.h	40;"	d
+FD_OPENED	util/types.h	41;"	d
+FILE_I	util/types.h	30;"	d
+FREE	kernel/process.h	/^  FREE,            \/\/ unused state$/;"	e	enum:proc_status
+FROMHOST	spike_interface/spike_htif.c	67;"	d	file:
+FROMHOST_CMD	spike_interface/spike_htif.h	18;"	d
+FROMHOST_DATA	spike_interface/spike_htif.h	19;"	d
+FROMHOST_DEV	spike_interface/spike_htif.h	17;"	d
+FROMHOST_OFFSET	spike_interface/spike_htif.c	70;"	d	file:
+HASH_TABLE_SIZE	util/hash_table.h	5;"	d
+HOSTFS_TYPE	kernel/hostfs.h	5;"	d
+HTIFSYS_access	spike_interface/spike_htif.h	83;"	d
+HTIFSYS_brk	spike_interface/spike_htif.h	34;"	d
+HTIFSYS_chdir	spike_interface/spike_htif.h	40;"	d
+HTIFSYS_clock_gettime	spike_interface/spike_htif.h	74;"	d
+HTIFSYS_close	spike_interface/spike_htif.h	32;"	d
+HTIFSYS_dup	spike_interface/spike_htif.h	67;"	d
+HTIFSYS_exit	spike_interface/spike_htif.h	25;"	d
+HTIFSYS_exit_group	spike_interface/spike_htif.h	26;"	d
+HTIFSYS_faccessat	spike_interface/spike_htif.h	44;"	d
+HTIFSYS_fcntl	spike_interface/spike_htif.h	64;"	d
+HTIFSYS_fork	spike_interface/spike_htif.h	48;"	d
+HTIFSYS_fstat	spike_interface/spike_htif.h	42;"	d
+HTIFSYS_fstatat	spike_interface/spike_htif.h	43;"	d
+HTIFSYS_ftruncate	spike_interface/spike_htif.h	65;"	d
+HTIFSYS_getcwd	spike_interface/spike_htif.h	41;"	d
+HTIFSYS_getdents	spike_interface/spike_htif.h	66;"	d
+HTIFSYS_getegid	spike_interface/spike_htif.h	53;"	d
+HTIFSYS_geteuid	spike_interface/spike_htif.h	51;"	d
+HTIFSYS_getgid	spike_interface/spike_htif.h	52;"	d
+HTIFSYS_getmainvars	spike_interface/spike_htif.h	59;"	d
+HTIFSYS_getpid	spike_interface/spike_htif.h	27;"	d
+HTIFSYS_getrlimit	spike_interface/spike_htif.h	71;"	d
+HTIFSYS_getrusage	spike_interface/spike_htif.h	73;"	d
+HTIFSYS_gettimeofday	spike_interface/spike_htif.h	62;"	d
+HTIFSYS_getuid	spike_interface/spike_htif.h	50;"	d
+HTIFSYS_init_memsize	spike_interface/spike_htif.h	22;"	d
+HTIFSYS_ioctl	spike_interface/spike_htif.h	70;"	d
+HTIFSYS_kill	spike_interface/spike_htif.h	28;"	d
+HTIFSYS_link	spike_interface/spike_htif.h	80;"	d
+HTIFSYS_linkat	spike_interface/spike_htif.h	35;"	d
+HTIFSYS_lseek	spike_interface/spike_htif.h	33;"	d
+HTIFSYS_lstat	spike_interface/spike_htif.h	85;"	d
+HTIFSYS_madvise	spike_interface/spike_htif.h	77;"	d
+HTIFSYS_mkdir	spike_interface/spike_htif.h	82;"	d
+HTIFSYS_mkdirat	spike_interface/spike_htif.h	38;"	d
+HTIFSYS_mmap	spike_interface/spike_htif.h	54;"	d
+HTIFSYS_mprotect	spike_interface/spike_htif.h	57;"	d
+HTIFSYS_mremap	spike_interface/spike_htif.h	56;"	d
+HTIFSYS_munmap	spike_interface/spike_htif.h	55;"	d
+HTIFSYS_open	spike_interface/spike_htif.h	79;"	d
+HTIFSYS_openat	spike_interface/spike_htif.h	31;"	d
+HTIFSYS_pread	spike_interface/spike_htif.h	45;"	d
+HTIFSYS_prlimit64	spike_interface/spike_htif.h	58;"	d
+HTIFSYS_pwrite	spike_interface/spike_htif.h	46;"	d
+HTIFSYS_read	spike_interface/spike_htif.h	29;"	d
+HTIFSYS_readlinkat	spike_interface/spike_htif.h	68;"	d
+HTIFSYS_renameat	spike_interface/spike_htif.h	39;"	d
+HTIFSYS_rt_sigaction	spike_interface/spike_htif.h	60;"	d
+HTIFSYS_rt_sigprocmask	spike_interface/spike_htif.h	69;"	d
+HTIFSYS_sema_down	spike_interface/spike_htif.h	23;"	d
+HTIFSYS_sema_up	spike_interface/spike_htif.h	24;"	d
+HTIFSYS_set_robust_list	spike_interface/spike_htif.h	76;"	d
+HTIFSYS_set_tid_address	spike_interface/spike_htif.h	75;"	d
+HTIFSYS_setrlimit	spike_interface/spike_htif.h	72;"	d
+HTIFSYS_stat	spike_interface/spike_htif.h	84;"	d
+HTIFSYS_time	spike_interface/spike_htif.h	86;"	d
+HTIFSYS_times	spike_interface/spike_htif.h	63;"	d
+HTIFSYS_uname	spike_interface/spike_htif.h	47;"	d
+HTIFSYS_unlink	spike_interface/spike_htif.h	81;"	d
+HTIFSYS_unlinkat	spike_interface/spike_htif.h	36;"	d
+HTIFSYS_wait	spike_interface/spike_htif.h	37;"	d
+HTIFSYS_wait	spike_interface/spike_htif.h	49;"	d
+HTIFSYS_write	spike_interface/spike_htif.h	30;"	d
+HTIFSYS_writev	spike_interface/spike_htif.h	61;"	d
+H_DIR	kernel/hostfs.h	9;"	d
+H_FILE	kernel/hostfs.h	8;"	d
+H_ROOT_DIR	kernel/hostfs.h	12;"	d
+INIT_FILE_REF	spike_interface/spike_file.h	25;"	d
+IRQ_M_SOFT	kernel/riscv.h	19;"	d
+IRQ_S_EXT	kernel/riscv.h	16;"	d
+IRQ_S_SOFT	kernel/riscv.h	18;"	d
+IRQ_S_TIMER	kernel/riscv.h	17;"	d
+IS_ERR_VALUE	spike_interface/spike_htif.h	88;"	d
+KERNEL_ASMS	Makefile	/^KERNEL_ASMS 	:= \\$/;"	m
+KERNEL_ASMS	Makefile	/^KERNEL_ASMS  	:= $(wildcard $(KERNEL_ASMS))$/;"	m
+KERNEL_CPPS	Makefile	/^KERNEL_CPPS 	:= \\$/;"	m
+KERNEL_CPPS	Makefile	/^KERNEL_CPPS  	:= $(wildcard $(KERNEL_CPPS))$/;"	m
+KERNEL_LDS	Makefile	/^KERNEL_LDS  	:= kernel\/kernel.lds$/;"	m
+KERNEL_OBJS	Makefile	/^KERNEL_OBJS  	:=  $(addprefix $(OBJ_DIR)\/, $(patsubst %.c,%.o,$(KERNEL_CPPS)))$/;"	m
+KERNEL_TARGET	Makefile	/^KERNEL_TARGET = $(OBJ_DIR)\/riscv-pke$/;"	m
+KERN_BASE	kernel/memlayout.h	9;"	d
+LSEEK_CUR	util/types.h	25;"	d
+LSEEK_SET	util/types.h	24;"	d
+MAKE_SATP	kernel/riscv.h	191;"	d
+MASK_FILEMODE	util/types.h	33;"	d
+MAX	util/functions.h	7;"	d
+MAXVA	kernel/riscv.h	221;"	d
+MAX_CMDLINE_ARGS	kernel/elf.h	7;"	d
+MAX_DENTRY_HASH_SIZE	kernel/vfs.h	10;"	d
+MAX_DENTRY_NAME_LEN	kernel/vfs.h	7;"	d
+MAX_DEVICE_NAME_LEN	kernel/vfs.h	8;"	d
+MAX_FDS	spike_interface/spike_file.h	17;"	d
+MAX_FILES	spike_interface/spike_file.h	16;"	d
+MAX_FILE_NAME_LEN	util/types.h	43;"	d
+MAX_MOUNTS	kernel/vfs.h	9;"	d
+MAX_PATH_LEN	kernel/vfs.h	11;"	d
+MAX_RAMDISK_COUNT	kernel/ramdev.h	10;"	d
+MAX_SUPPORTED_FS	kernel/vfs.h	12;"	d
+MAX_VFS_DEV	kernel/vfs.h	6;"	d
+MIE_MEIE	kernel/riscv.h	82;"	d
+MIE_MSIE	kernel/riscv.h	84;"	d
+MIE_MTIE	kernel/riscv.h	83;"	d
+MIN	util/functions.h	8;"	d
+MIP_MSIP	kernel/riscv.h	25;"	d
+MIP_SEIP	kernel/riscv.h	22;"	d
+MIP_SSIP	kernel/riscv.h	23;"	d
+MIP_STIP	kernel/riscv.h	24;"	d
+MOUNT_AS_ROOT	util/types.h	28;"	d
+MOUNT_DEFAULT	util/types.h	27;"	d
+MSTATUS_MIE	kernel/riscv.h	12;"	d
+MSTATUS_MPIE	kernel/riscv.h	13;"	d
+MSTATUS_MPP_M	kernel/riscv.h	9;"	d
+MSTATUS_MPP_MASK	kernel/riscv.h	8;"	d
+MSTATUS_MPP_S	kernel/riscv.h	10;"	d
+MSTATUS_MPP_U	kernel/riscv.h	11;"	d
+NCPU	kernel/config.h	5;"	d
+NPROC	kernel/process.h	23;"	d
+NULL	util/types.h	20;"	d
+OBJ_DIR	Makefile	/^OBJ_DIR 		:= obj$/;"	m
+O_CREAT	util/types.h	38;"	d
+O_RDONLY	util/types.h	35;"	d
+O_RDWR	util/types.h	37;"	d
+O_WRONLY	util/types.h	36;"	d
+PA2PTE	kernel/riscv.h	203;"	d
+PGSHIFT	kernel/riscv.h	187;"	d
+PGSIZE	kernel/riscv.h	186;"	d
+PHYS_TOP	kernel/config.h	14;"	d
+PKE_MAX_ALLOWABLE_RAM	kernel/config.h	11;"	d
+PMP_A	kernel/riscv.h	31;"	d
+PMP_L	kernel/riscv.h	32;"	d
+PMP_NA4	kernel/riscv.h	36;"	d
+PMP_NAPOT	kernel/riscv.h	37;"	d
+PMP_R	kernel/riscv.h	28;"	d
+PMP_SHIFT	kernel/riscv.h	33;"	d
+PMP_TOR	kernel/riscv.h	35;"	d
+PMP_W	kernel/riscv.h	29;"	d
+PMP_X	kernel/riscv.h	30;"	d
+PROT_EXEC	kernel/vmm.h	/^  PROT_EXEC = 4,$/;"	e	enum:VMPermision
+PROT_NONE	kernel/vmm.h	/^  PROT_NONE = 0,$/;"	e	enum:VMPermision
+PROT_READ	kernel/vmm.h	/^  PROT_READ = 1,$/;"	e	enum:VMPermision
+PROT_WRITE	kernel/vmm.h	/^  PROT_WRITE = 2,$/;"	e	enum:VMPermision
+PTE2PA	kernel/riscv.h	206;"	d
+PTE_A	kernel/riscv.h	199;"	d
+PTE_D	kernel/riscv.h	200;"	d
+PTE_FLAGS	kernel/riscv.h	209;"	d
+PTE_G	kernel/riscv.h	198;"	d
+PTE_R	kernel/riscv.h	194;"	d
+PTE_U	kernel/riscv.h	197;"	d
+PTE_V	kernel/riscv.h	193;"	d
+PTE_W	kernel/riscv.h	195;"	d
+PTE_X	kernel/riscv.h	196;"	d
+PTR_ERR	spike_interface/spike_htif.h	90;"	d
+PX	kernel/riscv.h	215;"	d
+PXMASK	kernel/riscv.h	212;"	d
+PXSHIFT	kernel/riscv.h	214;"	d
+RAMDISK_BLOCK_COUNT	kernel/ramdev.h	7;"	d
+RAMDISK_BLOCK_SIZE	kernel/ramdev.h	8;"	d
+RAMDISK_FREE	kernel/ramdev.h	12;"	d
+RAMDISK_USED	kernel/ramdev.h	13;"	d
+RANLIB	Makefile	/^RANLIB        	:= $(CROSS_PREFIX)ranlib$/;"	m
+READY	kernel/process.h	/^  READY,           \/\/ ready state$/;"	e	enum:proc_status
+RFS_BLKSIZE	kernel/rfs.h	11;"	d
+RFS_BLK_OFFSET_BITMAP	kernel/rfs.h	20;"	d
+RFS_BLK_OFFSET_FREE	kernel/rfs.h	21;"	d
+RFS_BLK_OFFSET_INODE	kernel/rfs.h	19;"	d
+RFS_BLK_OFFSET_SUPER	kernel/rfs.h	18;"	d
+RFS_DIRECT_BLKNUM	kernel/rfs.h	15;"	d
+RFS_INODESIZE	kernel/rfs.h	12;"	d
+RFS_MAGIC	kernel/rfs.h	10;"	d
+RFS_MAX_FILE_NAME_LEN	kernel/rfs.h	14;"	d
+RFS_MAX_INODE_BLKNUM	kernel/rfs.h	13;"	d
+RFS_TYPE	kernel/rfs.h	9;"	d
+ROUNDDOWN	util/functions.h	5;"	d
+ROUNDUP	util/functions.h	4;"	d
+RUNNING	kernel/process.h	/^  RUNNING,         \/\/ currently running$/;"	e	enum:proc_status
+R_DIR	kernel/rfs.h	25;"	d
+R_FILE	kernel/rfs.h	24;"	d
+R_FREE	kernel/rfs.h	26;"	d
+SATP_SV39	kernel/riscv.h	190;"	d
+SEGMENT_EXECUTABLE	kernel/elf.h	30;"	d
+SEGMENT_READABLE	kernel/elf.h	29;"	d
+SEGMENT_WRITABLE	kernel/elf.h	31;"	d
+SIE_SEIE	kernel/riscv.h	77;"	d
+SIE_SSIE	kernel/riscv.h	79;"	d
+SIE_STIE	kernel/riscv.h	78;"	d
+SIP_SSIP	kernel/riscv.h	60;"	d
+SPIKE_INF_CPPS	Makefile	/^SPIKE_INF_CPPS 	:= spike_interface\/*.c$/;"	m
+SPIKE_INF_CPPS	Makefile	/^SPIKE_INF_CPPS  := $(wildcard $(SPIKE_INF_CPPS))$/;"	m
+SPIKE_INF_LIB	Makefile	/^SPIKE_INF_LIB   := $(OBJ_DIR)\/spike_interface.a$/;"	m
+SPIKE_INF_OBJS	Makefile	/^SPIKE_INF_OBJS 	:=  $(addprefix $(OBJ_DIR)\/, $(patsubst %.c,%.o,$(SPIKE_INF_CPPS)))$/;"	m
+SPINLOCK_INIT	spike_interface/atomic.h	20;"	d
+SPROJS_INCLUDE	Makefile	/^SPROJS_INCLUDE 	:= -I.  $/;"	m
+SRC_DIR	Makefile	/^SRC_DIR        	:= .$/;"	m
+SSTATUS_FS	kernel/riscv.h	74;"	d
+SSTATUS_SIE	kernel/riscv.h	71;"	d
+SSTATUS_SPIE	kernel/riscv.h	69;"	d
+SSTATUS_SPP	kernel/riscv.h	68;"	d
+SSTATUS_SUM	kernel/riscv.h	73;"	d
+SSTATUS_UIE	kernel/riscv.h	72;"	d
+SSTATUS_UPIE	kernel/riscv.h	70;"	d
+STACK_SEGMENT	kernel/process.h	/^  STACK_SEGMENT,   \/\/ runtime segment$/;"	e	enum:segment_type
+STACK_SIZE	kernel/memlayout.h	12;"	d
+SYSTEM_SEGMENT	kernel/process.h	/^  SYSTEM_SEGMENT,  \/\/ system segment$/;"	e	enum:segment_type
+SYS_user_allocate_page	kernel/syscall.h	12;"	d
+SYS_user_base	kernel/syscall.h	8;"	d
+SYS_user_close	kernel/syscall.h	24;"	d
+SYS_user_closedir	kernel/syscall.h	29;"	d
+SYS_user_disk_stat	kernel/syscall.h	23;"	d
+SYS_user_exit	kernel/syscall.h	10;"	d
+SYS_user_fork	kernel/syscall.h	15;"	d
+SYS_user_free_page	kernel/syscall.h	13;"	d
+SYS_user_link	kernel/syscall.h	31;"	d
+SYS_user_lseek	kernel/syscall.h	21;"	d
+SYS_user_mkdir	kernel/syscall.h	28;"	d
+SYS_user_open	kernel/syscall.h	18;"	d
+SYS_user_opendir	kernel/syscall.h	26;"	d
+SYS_user_print	kernel/syscall.h	9;"	d
+SYS_user_read	kernel/syscall.h	19;"	d
+SYS_user_readdir	kernel/syscall.h	27;"	d
+SYS_user_stat	kernel/syscall.h	22;"	d
+SYS_user_unlink	kernel/syscall.h	32;"	d
+SYS_user_write	kernel/syscall.h	20;"	d
+SYS_user_yield	kernel/syscall.h	16;"	d
+TIMER_INTERVAL	kernel/config.h	8;"	d
+TIME_SLICE_LEN	kernel/sched.h	7;"	d
+TOHOST	spike_interface/spike_htif.c	66;"	d	file:
+TOHOST_CMD	spike_interface/spike_htif.h	11;"	d
+TOHOST_CMD	spike_interface/spike_htif.h	8;"	d
+TOHOST_OFFSET	spike_interface/spike_htif.c	69;"	d	file:
+TRUE	util/types.h	21;"	d
+USER_CPPS	Makefile	/^USER_CPPS 		:= user\/*.c $/;"	m
+USER_CPPS	Makefile	/^USER_CPPS  		:= $(wildcard $(USER_CPPS))$/;"	m
+USER_FREE_ADDRESS_START	kernel/memlayout.h	18;"	d
+USER_OBJS	Makefile	/^USER_OBJS  		:= $(addprefix $(OBJ_DIR)\/, $(patsubst %.c,%.o,$(USER_CPPS)))$/;"	m
+USER_STACK_TOP	kernel/memlayout.h	15;"	d
+USER_TARGET	Makefile	/^USER_TARGET 	:= $(OBJ_DIR)\/app_relativepath$/;"	m
+UTIL_CPPS	Makefile	/^UTIL_CPPS 	:= util\/*.c$/;"	m
+UTIL_CPPS	Makefile	/^UTIL_CPPS  := $(wildcard $(UTIL_CPPS))$/;"	m
+UTIL_LIB	Makefile	/^UTIL_LIB   := $(OBJ_DIR)\/util.a$/;"	m
+UTIL_OBJS	Makefile	/^UTIL_OBJS  :=  $(addprefix $(OBJ_DIR)\/, $(patsubst %.c,%.o,$(UTIL_CPPS)))$/;"	m
+VMPermision	kernel/vmm.h	/^enum VMPermision {$/;"	g
+ZOMBIE	kernel/process.h	/^  ZOMBIE,          \/\/ terminated but not reclaimed yet$/;"	e	enum:proc_status
+_CONFIG_H_	kernel/config.h	2;"	d
+_DT_PARSE_H_	spike_interface/dts_parse.h	2;"	d
+_ELF_H_	kernel/elf.h	2;"	d
+_FUNCTIONS_H_	util/functions.h	2;"	d
+_HASH_TABLE_H	util/hash_table.h	2;"	d
+_HOSTFS_H_	kernel/hostfs.h	2;"	d
+_MEMLAYOUT_H	kernel/memlayout.h	2;"	d
+_PMM_H_	kernel/pmm.h	2;"	d
+_PROC_FILE_H_	kernel/proc_file.h	2;"	d
+_PROC_H_	kernel/process.h	2;"	d
+_RAMDEV_H_	kernel/ramdev.h	2;"	d
+_RFS_H_	kernel/rfs.h	2;"	d
+_RISCV_ATOMIC_H_	spike_interface/atomic.h	6;"	d
+_RISCV_H_	kernel/riscv.h	2;"	d
+_SCHED_H_	kernel/sched.h	2;"	d
+_SNPRINTF_H	util/snprintf.h	3;"	d
+_SPIKE_FILE_H_	spike_interface/spike_file.h	2;"	d
+_SPIKE_HTIF_H_	spike_interface/spike_htif.h	2;"	d
+_SPIKE_MEMORY_H_	spike_interface/spike_memory.h	2;"	d
+_SPIKE_UTILS_H_	spike_interface/spike_utils.h	2;"	d
+_STRAP_H_	kernel/strap.h	2;"	d
+_STRING_H	util/string.h	2;"	d
+_SYSCALL_H_	kernel/syscall.h	5;"	d
+_TYPES_H_	util/types.h	2;"	d
+_USER_LIB_H_	user/user_lib.h	6;"	d
+_VFS_H_	kernel/vfs.h	2;"	d
+_VMM_H_	kernel/vmm.h	2;"	d
+__check_fromhost	spike_interface/spike_htif.c	/^static void __check_fromhost(void) {$/;"	f	file:
+__pad1	spike_interface/spike_file.h	/^  uint64 __pad1;$/;"	m	struct:frontend_stat
+__pad2	spike_interface/spike_file.h	/^  uint32 __pad2;$/;"	m	struct:frontend_stat
+__pad3	spike_interface/spike_file.h	/^  uint64 __pad3;$/;"	m	struct:frontend_stat
+__pad4	spike_interface/spike_file.h	/^  uint64 __pad4;$/;"	m	struct:frontend_stat
+__pad5	spike_interface/spike_file.h	/^  uint64 __pad5;$/;"	m	struct:frontend_stat
+__set_tohost	spike_interface/spike_htif.c	/^static void __set_tohost(uint64 dev, uint64 cmd, uint64 data) {$/;"	f	file:
+__unused4	spike_interface/spike_file.h	/^  uint32 __unused4;$/;"	m	struct:frontend_stat
+__unused5	spike_interface/spike_file.h	/^  uint32 __unused5;$/;"	m	struct:frontend_stat
+_mentry	kernel/machine/mentry.S	/^_mentry:$/;"	l
+a0	kernel/riscv.h	/^  \/*  72 *\/ uint64 a0;$/;"	m	struct:riscv_regs_t
+a1	kernel/riscv.h	/^  \/*  80 *\/ uint64 a1;$/;"	m	struct:riscv_regs_t
+a2	kernel/riscv.h	/^  \/*  88 *\/ uint64 a2;$/;"	m	struct:riscv_regs_t
+a3	kernel/riscv.h	/^  \/*  96 *\/ uint64 a3;$/;"	m	struct:riscv_regs_t
+a4	kernel/riscv.h	/^  \/* 104 *\/ uint64 a4;$/;"	m	struct:riscv_regs_t
+a5	kernel/riscv.h	/^  \/* 112 *\/ uint64 a5;$/;"	m	struct:riscv_regs_t
+a6	kernel/riscv.h	/^  \/* 120 *\/ uint64 a6;$/;"	m	struct:riscv_regs_t
+a7	kernel/riscv.h	/^  \/* 128 *\/ uint64 a7;$/;"	m	struct:riscv_regs_t
+address_cells	spike_interface/dts_parse.h	/^  int address_cells;$/;"	m	struct:fdt_scan_node
+addrs	kernel/rfs.h	/^  int addrs[RFS_DIRECT_BLKNUM];  \/\/ direct blocks$/;"	m	struct:rfs_dinode
+addrs	kernel/vfs.h	/^  int addrs[DIRECT_BLKNUM];  \/\/ direct blocks$/;"	m	struct:vinode
+align	kernel/elf.h	/^  uint64 align;  \/* Segment alignment *\/$/;"	m	struct:elf_prog_header_t
+alloc_page	kernel/pmm.c	/^void *alloc_page(void) {$/;"	f
+alloc_process	kernel/process.c	/^process* alloc_process() {$/;"	f
+alloc_vfs_dentry	kernel/vfs.c	/^struct dentry *alloc_vfs_dentry(const char *name, struct vinode *inode,$/;"	f
+alloc_vfs_file	kernel/vfs.c	/^struct file *alloc_vfs_file(struct dentry *file_dentry, int readable, int writable,$/;"	f
+arg_buf	kernel/elf.c	/^} arg_buf;$/;"	t	typeref:union:__anon1	file:
+argv	kernel/elf.c	/^  char *argv[MAX_CMDLINE_ARGS];$/;"	m	union:__anon1	file:
+assert	spike_interface/spike_utils.h	17;"	d
+atime	spike_interface/spike_file.h	/^  uint64 atime;$/;"	m	struct:frontend_stat
+atol	util/string.c	/^long atol(const char* str) {$/;"	f
+atomic_add	spike_interface/atomic.h	35;"	d
+atomic_binop	spike_interface/atomic.h	27;"	d
+atomic_cas	spike_interface/atomic.h	38;"	d
+atomic_or	spike_interface/atomic.h	36;"	d
+atomic_read	spike_interface/atomic.h	25;"	d
+atomic_set	spike_interface/atomic.h	24;"	d
+atomic_swap	spike_interface/atomic.h	37;"	d
+blksize	spike_interface/spike_file.h	/^  uint32 blksize;$/;"	m	struct:frontend_stat
+block_count	kernel/rfs.h	/^  int block_count;$/;"	m	struct:rfs_dir_cache
+blocks	kernel/rfs.h	/^  int blocks;                    \/\/ number of blocks$/;"	m	struct:rfs_dinode
+blocks	kernel/vfs.h	/^  int blocks;                \/\/ number of blocks$/;"	m	struct:vinode
+blocks	spike_interface/spike_file.h	/^  uint64 blocks;$/;"	m	struct:frontend_stat
+bool	util/types.h	/^typedef int bool;$/;"	t
+boot_cpuid_phys	spike_interface/dts_parse.h	/^  uint32 boot_cpuid_phys;$/;"	m	struct:fdt_header
+bswap	spike_interface/dts_parse.c	/^static inline uint32 bswap(uint32 x) {$/;"	f	file:
+buf	kernel/elf.c	/^  uint64 buf[MAX_CMDLINE_ARGS];$/;"	m	union:__anon1	file:
+close	spike_interface/dts_parse.h	/^  int (*close)(const struct fdt_scan_node *node,$/;"	m	struct:fdt_cb
+close	user/user_lib.c	/^int close(int fd) {$/;"	f
+closedir_u	user/user_lib.c	/^int closedir_u(int fd) {$/;"	f
+command	Makefile	/^	riscv64-unknown-elf-gdb -command=.\/.gdbinit$/;"	m
+compat	spike_interface/spike_htif.c	/^  int compat;$/;"	m	struct:htif_scan	file:
+copy_stat	spike_interface/spike_file.c	/^void copy_stat(struct stat* dest_va, struct frontend_stat* src) {$/;"	f
+cpu	spike_interface/atomic.h	/^  struct cpu* cpu;  \/\/ The cpu holding the lock.$/;"	m	struct:__anon2	typeref:struct:__anon2::cpu
+create_freepage_list	kernel/pmm.c	/^static void create_freepage_list(uint64 start, uint64 end) {$/;"	f	file:
+ctime	spike_interface/spike_file.h	/^  uint64 ctime;$/;"	m	struct:frontend_stat
+current	kernel/process.c	/^process* current = NULL;$/;"	v
+cwd	kernel/proc_file.h	/^  struct dentry *cwd;  \/\/ vfs dentry of current working directory$/;"	m	struct:proc_file_management_t	typeref:struct:proc_file_management_t::dentry
+d_address	kernel/ramdev.h	/^  void *d_address;  \/\/ the ramdisk base address$/;"	m	struct:rfs_device
+d_blocks	kernel/ramdev.h	/^  int d_blocks;     \/\/ the number of blocks of the device$/;"	m	struct:rfs_device
+d_blocksize	kernel/ramdev.h	/^  int d_blocksize;  \/\/ the blocksize (bytes) per block$/;"	m	struct:rfs_device
+d_read	kernel/ramdev.h	/^  int (*d_read)(struct rfs_device *rdev, int blkno); \/\/ device read funtion$/;"	m	struct:rfs_device
+d_ref	kernel/vfs.h	/^  int d_ref;$/;"	m	struct:dentry
+d_write	kernel/ramdev.h	/^  int (*d_write)(struct rfs_device *rdev, int blkno);  \/\/ device write funtion$/;"	m	struct:rfs_device
+defalut_get	util/hash_table.c	/^static void *defalut_get(struct hash_table *hash_table, void *key) {$/;"	f	file:
+default_alloc_vinode	kernel/vfs.c	/^struct vinode *default_alloc_vinode(struct super_block *sb) {$/;"	f
+default_equal	util/hash_table.c	/^static int default_equal(void *key1, void *key2) { return key1 == key2; }$/;"	f	file:
+default_erase	util/hash_table.c	/^static int default_erase(struct hash_table *hash_table, void *key) {$/;"	f	file:
+default_put	util/hash_table.c	/^static int default_put(struct hash_table *hash_table, void *key, void *value) {$/;"	f	file:
+delegate_traps	kernel/machine/minit.c	/^static void delegate_traps() {$/;"	f	file:
+dentry	kernel/vfs.h	/^struct dentry {$/;"	s
+dentry_hash_equal	kernel/vfs.c	/^int dentry_hash_equal(void *key1, void *key2) {$/;"	f
+dentry_hash_func	kernel/vfs.c	/^size_t dentry_hash_func(void *key) {$/;"	f
+dentry_hash_table	kernel/vfs.c	/^struct hash_table dentry_hash_table;$/;"	v	typeref:struct:hash_table
+dentry_inode	kernel/vfs.h	/^  struct vinode *dentry_inode;$/;"	m	struct:dentry	typeref:struct:dentry::vinode
+dentry_key	kernel/vfs.h	/^struct dentry_key {$/;"	s
+dev	spike_interface/spike_file.h	/^  uint64 dev;$/;"	m	struct:frontend_stat
+dev_id	kernel/vfs.h	/^  int dev_id;  \/\/ the id of the device (the meaning of an id is interpreted by$/;"	m	struct:device
+dev_name	kernel/vfs.h	/^  char dev_name[MAX_DEVICE_NAME_LEN];  \/\/ the name of the device$/;"	m	struct:device
+device	kernel/vfs.h	/^struct device {$/;"	s
+die	spike_interface/spike_utils.h	21;"	d
+dir	util/types.h	/^struct dir {$/;"	s
+dir_base_addr	kernel/rfs.h	/^  struct rfs_direntry *dir_base_addr;$/;"	m	struct:rfs_dir_cache	typeref:struct:rfs_dir_cache::rfs_direntry
+disable_irqsave	spike_interface/atomic.h	10;"	d
+disk_stat_u	user/user_lib.c	/^int disk_stat_u(int fd, struct istat *istat) {$/;"	f
+do_close	kernel/proc_file.c	/^int do_close(int fd) {$/;"	f
+do_closedir	kernel/proc_file.c	/^int do_closedir(int fd) {$/;"	f
+do_disk_stat	kernel/proc_file.c	/^int do_disk_stat(int fd, struct istat *istat) {$/;"	f
+do_fork	kernel/process.c	/^int do_fork( process* parent)$/;"	f
+do_link	kernel/proc_file.c	/^int do_link(char *oldpath, char *newpath) {$/;"	f
+do_lseek	kernel/proc_file.c	/^int do_lseek(int fd, int offset, int whence) {$/;"	f
+do_mkdir	kernel/proc_file.c	/^int do_mkdir(char *pathname) {$/;"	f
+do_open	kernel/proc_file.c	/^int do_open(char *pathname, int flags) {$/;"	f
+do_opendir	kernel/proc_file.c	/^int do_opendir(char *pathname) {$/;"	f
+do_panic	spike_interface/spike_utils.c	/^void do_panic(const char* s, ...) {$/;"	f
+do_read	kernel/proc_file.c	/^int do_read(int fd, char *buf, uint64 count) {$/;"	f
+do_readdir	kernel/proc_file.c	/^int do_readdir(int fd, struct dir *dir) {$/;"	f
+do_stat	kernel/proc_file.c	/^int do_stat(int fd, struct istat *istat) {$/;"	f
+do_syscall	kernel/syscall.c	/^long do_syscall(long a0, long a1, long a2, long a3, long a4, long a5, long a6, long a7) {$/;"	f
+do_tohost_fromhost	spike_interface/spike_htif.c	/^static void do_tohost_fromhost(uint64 dev, uint64 cmd, uint64 data) {$/;"	f	file:
+do_unlink	kernel/proc_file.c	/^int do_unlink(char *path) {$/;"	f
+do_user_call	user/user_lib.c	/^uint64 do_user_call(uint64 sysnum, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint64 a5, uint64 a6,$/;"	f
+do_write	kernel/proc_file.c	/^int do_write(int fd, char *buf, uint64 count) {$/;"	f
+done	spike_interface/dts_parse.h	/^  void (*done)(const struct fdt_scan_node *node,$/;"	m	struct:fdt_cb
+dop_read	kernel/ramdev.h	25;"	d
+dop_write	kernel/ramdev.h	24;"	d
+ehdr	kernel/elf.h	/^  elf_header ehdr;$/;"	m	struct:elf_ctx_t
+ehsize	kernel/elf.h	/^  uint16 ehsize;    \/* ELF header size in bytes *\/$/;"	m	struct:elf_header_t
+elf	kernel/elf.h	/^  uint8 elf[12];$/;"	m	struct:elf_header_t
+elf_alloc_mb	kernel/elf.c	/^static void *elf_alloc_mb(elf_ctx *ctx, uint64 elf_pa, uint64 elf_va, uint64 size) {$/;"	f	file:
+elf_ctx	kernel/elf.h	/^} elf_ctx;$/;"	t	typeref:struct:elf_ctx_t
+elf_ctx_t	kernel/elf.h	/^typedef struct elf_ctx_t {$/;"	s
+elf_fpread	kernel/elf.c	/^static uint64 elf_fpread(elf_ctx *ctx, void *dest, uint64 nb, uint64 offset) {$/;"	f	file:
+elf_header	kernel/elf.h	/^} elf_header;$/;"	t	typeref:struct:elf_header_t
+elf_header_t	kernel/elf.h	/^typedef struct elf_header_t {$/;"	s
+elf_info	kernel/elf.c	/^} elf_info;$/;"	t	typeref:struct:elf_info_t	file:
+elf_info_t	kernel/elf.c	/^typedef struct elf_info_t {$/;"	s	file:
+elf_init	kernel/elf.c	/^elf_status elf_init(elf_ctx *ctx, void *info) {$/;"	f
+elf_load	kernel/elf.c	/^elf_status elf_load(elf_ctx *ctx) {$/;"	f
+elf_prog_header	kernel/elf.h	/^} elf_prog_header;$/;"	t	typeref:struct:elf_prog_header_t
+elf_prog_header_t	kernel/elf.h	/^typedef struct elf_prog_header_t {$/;"	s
+elf_status	kernel/elf.h	/^} elf_status;$/;"	t	typeref:enum:elf_status_t
+elf_status_t	kernel/elf.h	/^typedef enum elf_status_t {$/;"	g
+enable_irqrestore	spike_interface/atomic.h	11;"	d
+enable_paging	kernel/kernel.c	/^void enable_paging() {$/;"	f
+entry	kernel/elf.h	/^  uint64 entry;     \/* Entry point virtual address *\/$/;"	m	struct:elf_header_t
+epc	kernel/process.h	/^  \/* offset:264 *\/ uint64 epc;$/;"	m	struct:trapframe_t
+exit	user/user_lib.c	/^int exit(int code) {$/;"	f
+extra	spike_interface/dts_parse.h	/^  void *extra;$/;"	m	struct:fdt_cb
+f	kernel/elf.c	/^  spike_file_t *f;$/;"	m	struct:elf_info_t	file:
+f_dentry	kernel/vfs.h	/^  struct dentry *f_dentry;$/;"	m	struct:file	typeref:struct:file::dentry
+fdt_cb	spike_interface/dts_parse.h	/^struct fdt_cb {$/;"	s
+fdt_get_address	spike_interface/dts_parse.c	/^const uint32 *fdt_get_address(const struct fdt_scan_node *node, const uint32 *value,$/;"	f
+fdt_get_size	spike_interface/dts_parse.c	/^const uint32 *fdt_get_size(const struct fdt_scan_node *node, const uint32 *value, uint64 *result) {$/;"	f
+fdt_header	spike_interface/dts_parse.h	/^struct fdt_header {$/;"	s
+fdt_scan	spike_interface/dts_parse.c	/^void fdt_scan(uint64 fdt, const struct fdt_cb *cb) {$/;"	f
+fdt_scan_helper	spike_interface/dts_parse.c	/^static uint32 *fdt_scan_helper(uint32 *lex, const char *strings, struct fdt_scan_node *node,$/;"	f	file:
+fdt_scan_node	spike_interface/dts_parse.h	/^struct fdt_scan_node {$/;"	s
+fdt_scan_prop	spike_interface/dts_parse.h	/^struct fdt_scan_prop {$/;"	s
+file	kernel/vfs.h	/^struct file {$/;"	s
+file_system_type	kernel/vfs.h	/^struct file_system_type {$/;"	s
+file_t	spike_interface/spike_file.h	/^typedef struct file_t {$/;"	s
+filesz	kernel/elf.h	/^  uint64 filesz; \/* Segment size in file *\/$/;"	m	struct:elf_prog_header_t
+flags	kernel/elf.h	/^  uint32 flags;     \/* Processor-specific flags *\/$/;"	m	struct:elf_header_t
+flags	kernel/elf.h	/^  uint32 flags;  \/* Segment flags *\/$/;"	m	struct:elf_prog_header_t
+flush_tlb	kernel/riscv.h	/^static inline void flush_tlb(void) { asm volatile("sfence.vma zero, zero"); }$/;"	f
+fork	user/user_lib.c	/^int fork() {$/;"	f
+free_mem_end_addr	kernel/pmm.c	/^static uint64 free_mem_end_addr;    \/\/end address of free memory (not included)$/;"	v	file:
+free_mem_start_addr	kernel/pmm.c	/^static uint64 free_mem_start_addr;  \/\/beginning address of free memory$/;"	v	file:
+free_page	kernel/pmm.c	/^void free_page(void *pa) {$/;"	f
+free_process	kernel/process.c	/^int free_process( process* proc ) {$/;"	f
+free_vfs_dentry	kernel/vfs.c	/^int free_vfs_dentry(struct dentry *dentry) {$/;"	f
+fromhost	spike_interface/spike_htif.c	/^volatile uint64_t fromhost __attribute__((section(".htif")));$/;"	v
+frontend_stat	spike_interface/spike_file.h	/^struct frontend_stat {$/;"	s
+frontend_syscall	spike_interface/spike_utils.c	/^long frontend_syscall(long n, uint64 a0, uint64 a1, uint64 a2, uint64 a3, uint64 a4,$/;"	f
+fs_init	kernel/proc_file.c	/^void fs_init(void) {$/;"	f
+fs_list	kernel/vfs.c	/^struct file_system_type *fs_list[MAX_SUPPORTED_FS];$/;"	v	typeref:struct:file_system_type
+fs_type	kernel/vfs.h	/^  struct file_system_type *fs_type;  \/\/ the file system type in the device$/;"	m	struct:device	typeref:struct:device::file_system_type
+g_free_mem_list	kernel/pmm.c	/^static list_node g_free_mem_list;$/;"	v	file:
+g_itrframe	kernel/machine/minit.c	/^riscv_regs g_itrframe;$/;"	v
+g_kernel_pagetable	kernel/vmm.c	/^pagetable_t g_kernel_pagetable;$/;"	v
+g_mem_size	spike_interface/spike_memory.c	/^uint64 g_mem_size;$/;"	v
+g_ticks	kernel/strap.c	/^static uint64 g_ticks = 0;$/;"	v	file:
+g_ufree_page	kernel/process.c	/^uint64 g_ufree_page = USER_FREE_ADDRESS_START;$/;"	v
+get_base_name	kernel/vfs.c	/^void get_base_name(const char *path, char *base_name) {$/;"	f
+get_opened_file	kernel/proc_file.c	/^struct file *get_opened_file(int fd) {$/;"	f
+get_path_string	kernel/hostfs.c	/^void get_path_string(char *path, struct dentry *dentry) {$/;"	f
+get_superblock	kernel/vfs.h	/^  struct super_block *(*get_superblock)(struct device *dev);$/;"	m	struct:file_system_type	typeref:struct:file_system_type::get_superblock
+gid	spike_interface/spike_file.h	/^  uint32 gid;$/;"	m	struct:frontend_stat
+gp	kernel/riscv.h	/^  \/*  16 *\/ uint64 gp;$/;"	m	struct:riscv_regs_t
+handle_illegal_instruction	kernel/machine/mtrap.c	/^static void handle_illegal_instruction() { panic("Illegal instruction!"); }$/;"	f	file:
+handle_instruction_access_fault	kernel/machine/mtrap.c	/^static void handle_instruction_access_fault() { panic("Instruction access fault!"); }$/;"	f	file:
+handle_load_access_fault	kernel/machine/mtrap.c	/^static void handle_load_access_fault() { panic("Load access fault!"); }$/;"	f	file:
+handle_misaligned_load	kernel/machine/mtrap.c	/^static void handle_misaligned_load() { panic("Misaligned Load!"); }$/;"	f	file:
+handle_misaligned_store	kernel/machine/mtrap.c	/^static void handle_misaligned_store() { panic("Misaligned AMO!"); }$/;"	f	file:
+handle_mtimer_trap	kernel/strap.c	/^void handle_mtimer_trap() {$/;"	f
+handle_mtrap	kernel/machine/mtrap.c	/^void handle_mtrap() {$/;"	f
+handle_store_access_fault	kernel/machine/mtrap.c	/^static void handle_store_access_fault() { panic("Store\/AMO access fault!"); }$/;"	f	file:
+handle_syscall	kernel/strap.c	/^static void handle_syscall(trapframe *tf) {$/;"	f	file:
+handle_timer	kernel/machine/mtrap.c	/^static void handle_timer() {$/;"	f	file:
+handle_user_page_fault	kernel/strap.c	/^void handle_user_page_fault(uint64 mcause, uint64 sepc, uint64 stval) {$/;"	f
+hash_erase_dentry	kernel/vfs.c	/^int hash_erase_dentry(struct dentry *dentry) {$/;"	f
+hash_erase_vinode	kernel/vfs.c	/^int hash_erase_vinode(struct vinode *vinode) {$/;"	f
+hash_get_dentry	kernel/vfs.c	/^struct dentry *hash_get_dentry(struct dentry *parent, char *name) {$/;"	f
+hash_get_vinode	kernel/vfs.c	/^struct vinode *hash_get_vinode(struct super_block *sb, int inum) {$/;"	f
+hash_node	util/hash_table.h	/^struct hash_node {$/;"	s
+hash_put_dentry	kernel/vfs.c	/^int hash_put_dentry(struct dentry *dentry) {$/;"	f
+hash_put_vinode	kernel/vfs.c	/^int hash_put_vinode(struct vinode *vinode) {$/;"	f
+hash_table	util/hash_table.h	/^struct hash_table {$/;"	s
+hash_table_init	util/hash_table.c	/^int hash_table_init(struct hash_table *list,$/;"	f
+head	util/hash_table.h	/^  struct hash_node head[HASH_TABLE_SIZE];$/;"	m	struct:hash_table	typeref:struct:hash_table::hash_node
+hostfs_alloc_vinode	kernel/hostfs.c	/^struct vinode *hostfs_alloc_vinode(struct super_block *sb) {$/;"	f
+hostfs_create	kernel/hostfs.c	/^struct vinode *hostfs_create(struct vinode *parent, struct dentry *sub_dentry) {$/;"	f
+hostfs_get_superblock	kernel/hostfs.c	/^struct super_block *hostfs_get_superblock(struct device *dev) {$/;"	f
+hostfs_hook_close	kernel/hostfs.c	/^int hostfs_hook_close(struct vinode *f_inode, struct dentry *dentry) {$/;"	f
+hostfs_hook_open	kernel/hostfs.c	/^int hostfs_hook_open(struct vinode *f_inode, struct dentry *f_dentry) {$/;"	f
+hostfs_i_ops	kernel/hostfs.c	/^const struct vinode_ops hostfs_i_ops = {$/;"	v	typeref:struct:vinode_ops
+hostfs_link	kernel/hostfs.c	/^int hostfs_link(struct vinode *parent, struct dentry *sub_dentry,$/;"	f
+hostfs_lookup	kernel/hostfs.c	/^struct vinode *hostfs_lookup(struct vinode *parent, struct dentry *sub_dentry) {$/;"	f
+hostfs_lseek	kernel/hostfs.c	/^int hostfs_lseek(struct vinode *f_inode, ssize_t new_offset, int whence,$/;"	f
+hostfs_mkdir	kernel/hostfs.c	/^struct vinode *hostfs_mkdir(struct vinode *parent, struct dentry *sub_dentry) {$/;"	f
+hostfs_read	kernel/hostfs.c	/^ssize_t hostfs_read(struct vinode *f_inode, char *r_buf, ssize_t len,$/;"	f
+hostfs_readdir	kernel/hostfs.c	/^int hostfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {$/;"	f
+hostfs_unlink	kernel/hostfs.c	/^int hostfs_unlink(struct vinode *parent, struct dentry *sub_dentry, struct vinode *unlink_node) {$/;"	f
+hostfs_update_vinode	kernel/hostfs.c	/^int hostfs_update_vinode(struct vinode *vinode) {$/;"	f
+hostfs_write	kernel/hostfs.c	/^ssize_t hostfs_write(struct vinode *f_inode, const char *w_buf, ssize_t len,$/;"	f
+hostfs_write_back_vinode	kernel/hostfs.c	/^int hostfs_write_back_vinode(struct vinode *vinode) { return 0; }$/;"	f
+htif	spike_interface/spike_htif.c	/^uint64 htif;  \/\/is Spike HTIF avaiable? initially 0 (false)$/;"	v
+htif_console_buf	spike_interface/spike_htif.c	/^volatile int htif_console_buf;$/;"	v
+htif_console_getchar	spike_interface/spike_htif.c	/^int htif_console_getchar(void) {$/;"	f
+htif_console_putchar	spike_interface/spike_htif.c	/^void htif_console_putchar(uint8_t ch) {$/;"	f
+htif_done	spike_interface/spike_htif.c	/^static void htif_done(const struct fdt_scan_node *node, void *extra) {$/;"	f	file:
+htif_lock	spike_interface/spike_htif.c	/^static spinlock_t htif_lock = SPINLOCK_INIT;$/;"	v	file:
+htif_open	spike_interface/spike_htif.c	/^static void htif_open(const struct fdt_scan_node *node, void *extra) {$/;"	f	file:
+htif_poweroff	spike_interface/spike_htif.c	/^void htif_poweroff(void) {$/;"	f
+htif_prop	spike_interface/spike_htif.c	/^static void htif_prop(const struct fdt_scan_prop *prop, void *extra) {$/;"	f	file:
+htif_scan	spike_interface/spike_htif.c	/^struct htif_scan {$/;"	s	file:
+htif_syscall	spike_interface/spike_htif.c	/^void htif_syscall(uint64 arg) { do_tohost_fromhost(0, 0, arg); }$/;"	f
+i_fs_info	kernel/vfs.h	/^  void *i_fs_info;           \/\/ filesystem-specific info (see s_fs_info)$/;"	m	struct:vinode
+i_ops	kernel/vfs.h	/^  const struct vinode_ops *i_ops;  \/\/ vfs inode operations$/;"	m	struct:vinode	typeref:struct:vinode::vinode_ops
+info	kernel/elf.h	/^  void *info;$/;"	m	struct:elf_ctx_t
+init_dtb	kernel/machine/minit.c	/^void init_dtb(uint64 dtb) {$/;"	f
+init_host_device	kernel/hostfs.c	/^struct device *init_host_device(char *name) {$/;"	f
+init_proc_file_management	kernel/proc_file.c	/^proc_file_management *init_proc_file_management(void) {$/;"	f
+init_proc_pool	kernel/process.c	/^void init_proc_pool() {$/;"	f
+init_rfs_device	kernel/ramdev.c	/^struct device *init_rfs_device(const char *dev_name) {$/;"	f
+ino	spike_interface/spike_file.h	/^  uint64 ino;$/;"	m	struct:frontend_stat
+insert_to_ready_queue	kernel/sched.c	/^void insert_to_ready_queue( process* proc ) {$/;"	f
+int16	util/types.h	/^typedef signed short int16;$/;"	t
+int32	util/types.h	/^typedef signed int int32;$/;"	t
+int64	util/types.h	/^typedef signed long long int64;$/;"	t
+int8	util/types.h	/^typedef signed char int8;$/;"	t
+intr_off	kernel/riscv.h	/^static inline void intr_off(void) { write_csr(sstatus, read_csr(sstatus) & ~SSTATUS_SIE); }$/;"	f
+intr_on	kernel/riscv.h	/^static inline void intr_on(void) { write_csr(sstatus, read_csr(sstatus) | SSTATUS_SIE); }$/;"	f
+inum	kernel/rfs.h	/^  int inum;                          \/\/ inode number$/;"	m	struct:rfs_direntry
+inum	kernel/vfs.h	/^  int inum;                  \/\/ inode number of the disk inode$/;"	m	struct:vinode
+inum	kernel/vfs.h	/^  int inum;$/;"	m	struct:vinode_key
+inum	util/types.h	/^  int inum;$/;"	m	struct:dir
+iobuffer	kernel/ramdev.h	/^  void *iobuffer;   \/\/ iobuffer for write\/read$/;"	m	struct:rfs_device
+is_32bit	Makefile	/^  is_32bit := $(findstring 32,$(march))$/;"	m
+is_intr_enable	kernel/riscv.h	/^static inline int is_intr_enable(void) {$/;"	f
+istat	util/types.h	/^struct istat {$/;"	s
+kassert	spike_interface/spike_utils.h	36;"	d
+kassert_fail	spike_interface/spike_utils.c	/^void kassert_fail(const char* s) {$/;"	f
+kern_vm_init	kernel/vmm.c	/^void kern_vm_init(void) {$/;"	f
+kern_vm_map	kernel/vmm.c	/^void kern_vm_map(pagetable_t page_dir, uint64 va, uint64 pa, uint64 sz, int perm) {$/;"	f
+kernel_satp	kernel/process.h	/^  \/* offset:272 *\/ uint64 kernel_satp;$/;"	m	struct:trapframe_t
+kernel_sp	kernel/process.h	/^  \/* offset:248 *\/ uint64 kernel_sp;$/;"	m	struct:trapframe_t
+kernel_trap	kernel/process.h	/^  \/* offset:256 *\/ uint64 kernel_trap;$/;"	m	struct:trapframe_t
+key	util/hash_table.h	/^  void *key;$/;"	m	struct:hash_node
+kfd	spike_interface/spike_file.h	/^  int kfd;  \/\/ file descriptor of the host file$/;"	m	struct:file_t
+kstack	kernel/process.h	/^  uint64 kstack;$/;"	m	struct:process_t
+last_comp_version	spike_interface/dts_parse.h	/^  uint32 last_comp_version; \/* <= 17 *\/$/;"	m	struct:fdt_header
+len	spike_interface/dts_parse.h	/^  int len;  \/\/ in bytes of value$/;"	m	struct:fdt_scan_prop
+likely	util/functions.h	9;"	d
+link_u	user/user_lib.c	/^int link_u(const char *fn1, const char *fn2){$/;"	f
+list_node	kernel/pmm.c	/^} list_node;$/;"	t	typeref:struct:node	file:
+load_bincode_from_host_elf	kernel/elf.c	/^void load_bincode_from_host_elf(process *p) {$/;"	f
+load_user_program	kernel/kernel.c	/^process* load_user_program() {$/;"	f
+lock	spike_interface/atomic.h	/^  int lock;$/;"	m	struct:__anon2
+lookup_final_dentry	kernel/vfs.c	/^struct dentry *lookup_final_dentry(const char *path, struct dentry **parent,$/;"	f
+lookup_pa	kernel/vmm.c	/^uint64 lookup_pa(pagetable_t pagetable, uint64 va) {$/;"	f
+lseek_u	user/user_lib.c	/^int lseek_u(int fd, int offset, int whence) {$/;"	f
+m_start	kernel/machine/minit.c	/^void m_start(uintptr_t hartid, uintptr_t dtb) {$/;"	f
+mabi	Makefile	/^  mabi := -mabi=$(if $(is_32bit),ilp32,lp64)$/;"	m
+machine	kernel/elf.h	/^  uint16 machine;   \/* Architecture *\/$/;"	m	struct:elf_header_t
+magic	kernel/elf.h	/^  uint32 magic;$/;"	m	struct:elf_header_t
+magic	kernel/rfs.h	/^  int magic;    \/\/ magic number of the$/;"	m	struct:rfs_superblock
+magic	kernel/vfs.h	/^  int magic;              \/\/ magic number of the file system$/;"	m	struct:super_block
+magic	spike_interface/dts_parse.h	/^  uint32 magic;$/;"	m	struct:fdt_header
+main	user/app_relativepath.c	/^int main(int argc, char *argv[]) {$/;"	f
+map_pages	kernel/vmm.c	/^int map_pages(pagetable_t page_dir, uint64 va, uint64 size, uint64 pa, int perm) {$/;"	f
+mapped_info	kernel/process.h	/^  mapped_region *mapped_info;$/;"	m	struct:process_t
+mapped_region	kernel/process.h	/^typedef struct mapped_region {$/;"	s
+mapped_region	kernel/process.h	/^} mapped_region;$/;"	t	typeref:struct:mapped_region
+march	Makefile	/^  march := -march=$/;"	m
+mb	spike_interface/atomic.h	23;"	d
+mcall_console_putchar	spike_interface/spike_utils.c	/^static uintptr_t mcall_console_putchar(uint8 ch) {$/;"	f	file:
+mem_done	spike_interface/spike_memory.c	/^static void mem_done(const struct fdt_scan_node *node, void *extra) {$/;"	f	file:
+mem_open	spike_interface/spike_memory.c	/^static void mem_open(const struct fdt_scan_node *node, void *extra) {$/;"	f	file:
+mem_prop	spike_interface/spike_memory.c	/^static void mem_prop(const struct fdt_scan_prop *prop, void *extra) {$/;"	f	file:
+mem_scan	spike_interface/spike_memory.c	/^struct mem_scan {$/;"	s	file:
+memcpy	util/string.c	/^void* memcpy(void* dest, const void* src, size_t len) {$/;"	f
+memmove	util/string.c	/^void* memmove(void* dst, const void* src, size_t n) {$/;"	f
+memory	spike_interface/spike_memory.c	/^  int memory;$/;"	m	struct:mem_scan	file:
+memset	util/string.c	/^void* memset(void* dest, int byte, size_t len) {$/;"	f
+memsz	kernel/elf.h	/^  uint64 memsz;  \/* Segment size in memory *\/$/;"	m	struct:elf_prog_header_t
+mkdir_u	user/user_lib.c	/^int mkdir_u(const char *pathname) {$/;"	f
+mode	spike_interface/spike_file.h	/^  uint32 mode;$/;"	m	struct:frontend_stat
+mtime	spike_interface/spike_file.h	/^  uint64 mtime;$/;"	m	struct:frontend_stat
+mtrapvec	kernel/machine/mtrap_vector.S	/^mtrapvec:$/;"	l
+naive_free	user/user_lib.c	/^void naive_free(void* va) {$/;"	f
+naive_malloc	user/user_lib.c	/^void* naive_malloc() {$/;"	f
+name	kernel/rfs.h	/^  char name[RFS_MAX_FILE_NAME_LEN];  \/\/ file name$/;"	m	struct:rfs_direntry
+name	kernel/vfs.h	/^  char *name;$/;"	m	struct:dentry_key
+name	kernel/vfs.h	/^  char name[MAX_DENTRY_NAME_LEN];$/;"	m	struct:dentry
+name	spike_interface/atomic.h	/^  char* name;       \/\/ Name of lock.$/;"	m	struct:__anon2
+name	spike_interface/dts_parse.h	/^  const char *name;$/;"	m	struct:fdt_scan_node
+name	spike_interface/dts_parse.h	/^  const char *name;$/;"	m	struct:fdt_scan_prop
+name	util/types.h	/^  char name[MAX_FILE_NAME_LEN];$/;"	m	struct:dir
+nblocks	kernel/rfs.h	/^  int nblocks;  \/\/ number of data blocks$/;"	m	struct:rfs_superblock
+nblocks	kernel/vfs.h	/^  int nblocks;            \/\/ number of data blocks$/;"	m	struct:super_block
+next	kernel/pmm.c	/^  struct node *next;$/;"	m	struct:node	typeref:struct:node::node	file:
+next	util/hash_table.h	/^  struct hash_node *next;$/;"	m	struct:hash_node	typeref:struct:hash_node::hash_node
+nfiles	kernel/proc_file.h	/^  int nfiles;  \/\/ the number of opened files a process has$/;"	m	struct:proc_file_management_t
+ninodes	kernel/rfs.h	/^  int ninodes;  \/\/ number of inodes.$/;"	m	struct:rfs_superblock
+ninodes	kernel/vfs.h	/^  int ninodes;            \/\/ number of inodes.$/;"	m	struct:super_block
+nlink	spike_interface/spike_file.h	/^  uint32 nlink;$/;"	m	struct:frontend_stat
+nlinks	kernel/rfs.h	/^  int nlinks;                    \/\/ number of hard links to this file$/;"	m	struct:rfs_dinode
+nlinks	kernel/vfs.h	/^  int nlinks;                \/\/ number of hard links to this file$/;"	m	struct:vinode
+node	kernel/pmm.c	/^typedef struct node {$/;"	s	file:
+node	spike_interface/dts_parse.h	/^  const struct fdt_scan_node *node;$/;"	m	struct:fdt_scan_prop	typeref:struct:fdt_scan_prop::fdt_scan_node
+npages	kernel/process.h	/^  uint32 npages;   \/\/ mapping_info is unused if npages == 0$/;"	m	struct:mapped_region
+off	kernel/elf.h	/^  uint64 off;    \/* Segment file offset *\/$/;"	m	struct:elf_prog_header_t
+off_dt_strings	spike_interface/dts_parse.h	/^  uint32 off_dt_strings;$/;"	m	struct:fdt_header
+off_dt_struct	spike_interface/dts_parse.h	/^  uint32 off_dt_struct;$/;"	m	struct:fdt_header
+off_mem_rsvmap	spike_interface/dts_parse.h	/^  uint32 off_mem_rsvmap;$/;"	m	struct:fdt_header
+offset	kernel/vfs.h	/^  int offset;$/;"	m	struct:file
+open	spike_interface/dts_parse.h	/^  void (*open)(const struct fdt_scan_node *node, void *extra);$/;"	m	struct:fdt_cb
+open	user/user_lib.c	/^int open(const char *pathname, int flags) {$/;"	f
+opendir_u	user/user_lib.c	/^int opendir_u(const char *dirname) {$/;"	f
+opened_files	kernel/proc_file.h	/^  struct file opened_files[MAX_FILES];  \/\/ opened files array$/;"	m	struct:proc_file_management_t	typeref:struct:proc_file_management_t::file
+p	kernel/elf.c	/^  process *p;$/;"	m	struct:elf_info_t	file:
+paddr	kernel/elf.h	/^  uint64 paddr;  \/* Segment physical address *\/$/;"	m	struct:elf_prog_header_t
+page_walk	kernel/vmm.c	/^pte_t *page_walk(pagetable_t page_dir, uint64 va, int alloc) {$/;"	f
+pagetable	kernel/process.h	/^  pagetable_t pagetable;$/;"	m	struct:process_t
+pagetable_t	kernel/riscv.h	/^typedef uint64 *pagetable_t;  \/\/ 512 PTEs$/;"	t
+panic	spike_interface/spike_utils.h	32;"	d
+parent	kernel/process.h	/^  struct process_t *parent;$/;"	m	struct:process_t	typeref:struct:process_t::process_t
+parent	kernel/vfs.h	/^  struct dentry *parent;$/;"	m	struct:dentry	typeref:struct:dentry::dentry
+parent	kernel/vfs.h	/^  struct dentry *parent;$/;"	m	struct:dentry_key	typeref:struct:dentry_key::dentry
+parent	spike_interface/dts_parse.h	/^  const struct fdt_scan_node *parent;$/;"	m	struct:fdt_scan_node	typeref:struct:fdt_scan_node::fdt_scan_node
+parse_args	kernel/elf.c	/^static size_t parse_args(arg_buf *arg_bug_msg) {$/;"	f	file:
+path_backtrack	kernel/hostfs.c	/^void path_backtrack(char *path, struct dentry *dentry) {$/;"	f
+pfiles	kernel/process.h	/^  proc_file_management *pfiles;$/;"	m	struct:process_t
+phentsize	kernel/elf.h	/^  uint16 phentsize; \/* Program header table entry size *\/$/;"	m	struct:elf_header_t
+phnum	kernel/elf.h	/^  uint16 phnum;     \/* Program header table entry count *\/$/;"	m	struct:elf_header_t
+phoff	kernel/elf.h	/^  uint64 phoff;     \/* Program header table file offset *\/$/;"	m	struct:elf_header_t
+pid	kernel/process.h	/^  uint64 pid;$/;"	m	struct:process_t
+pmm_init	kernel/pmm.c	/^void pmm_init() {$/;"	f
+poweroff	spike_interface/spike_utils.c	/^void poweroff(uint16_t code) {$/;"	f
+print_proc_vmspace	kernel/vmm.c	/^void print_proc_vmspace(process* proc) {$/;"	f
+printk	spike_interface/spike_utils.c	/^void printk(const char* s, ...) {$/;"	f
+printu	user/user_lib.c	/^int printu(const char* s, ...) {$/;"	f
+proc_file_management	kernel/proc_file.h	/^} proc_file_management;$/;"	t	typeref:struct:proc_file_management_t
+proc_file_management_t	kernel/proc_file.h	/^typedef struct proc_file_management_t {$/;"	s
+proc_status	kernel/process.h	/^enum proc_status {$/;"	g
+process	kernel/process.h	/^}process;$/;"	t	typeref:struct:process_t
+process_t	kernel/process.h	/^typedef struct process_t {$/;"	s
+procs	kernel/process.c	/^process procs[NPROC];$/;"	v
+prop	spike_interface/dts_parse.h	/^  void (*prop)(const struct fdt_scan_prop *prop, void *extra);$/;"	m	struct:fdt_cb
+prot_to_type	kernel/vmm.c	/^uint64 prot_to_type(int prot, int user) {$/;"	f
+pte_t	kernel/riscv.h	/^typedef uint64 pte_t;$/;"	t
+putstring	spike_interface/spike_utils.c	/^void putstring(const char* s) {$/;"	f
+query_htif	spike_interface/spike_htif.c	/^void query_htif(uint64 fdt) {$/;"	f
+query_mem	spike_interface/spike_memory.c	/^void query_mem(uint64 fdt) {$/;"	f
+queue_next	kernel/process.h	/^  struct process_t *queue_next;$/;"	m	struct:process_t	typeref:struct:process_t::process_t
+ra	kernel/riscv.h	/^  \/*  0  *\/ uint64 ra;$/;"	m	struct:riscv_regs_t
+ramdisk_read	kernel/ramdev.c	/^int ramdisk_read(struct rfs_device *rfs_device, int blkno){$/;"	f
+ramdisk_write	kernel/ramdev.c	/^int ramdisk_write(struct rfs_device *rfs_device, int blkno){$/;"	f
+rdev	spike_interface/spike_file.h	/^  uint64 rdev;$/;"	m	struct:frontend_stat
+read_const_csr	kernel/riscv.h	86;"	d
+read_csr	kernel/riscv.h	97;"	d
+read_sp	kernel/riscv.h	/^static inline uint64 read_sp(void) {$/;"	f
+read_tp	kernel/riscv.h	/^static inline uint64 read_tp(void) {$/;"	f
+read_u	user/user_lib.c	/^int read_u(int fd, void * buf, uint64 count){$/;"	f
+readable	kernel/vfs.h	/^  int readable;$/;"	m	struct:file
+readdir_u	user/user_lib.c	/^int readdir_u(int fd, struct dir *dir) {$/;"	f
+ready_queue_head	kernel/sched.c	/^process* ready_queue_head = NULL;$/;"	v
+reclaim_proc_file_management	kernel/proc_file.c	/^void reclaim_proc_file_management(proc_file_management *pfiles) {$/;"	f
+ref	kernel/vfs.h	/^  int ref;                   \/\/ reference count$/;"	m	struct:vinode
+refcnt	spike_interface/spike_file.h	/^  uint32 refcnt;$/;"	m	struct:file_t
+reg_len	spike_interface/spike_memory.c	/^  int reg_len;$/;"	m	struct:mem_scan	file:
+reg_value	spike_interface/spike_memory.c	/^  const uint32 *reg_value;$/;"	m	struct:mem_scan	file:
+register_hostfs	kernel/hostfs.c	/^int register_hostfs() {$/;"	f
+register_rfs	kernel/rfs.c	/^int register_rfs() {$/;"	f
+regs	kernel/process.h	/^  \/* offset:0   *\/ riscv_regs regs;$/;"	m	struct:trapframe_t
+return_to_user	kernel/strap_vector.S	/^return_to_user:$/;"	l
+rfs_add_direntry	kernel/rfs.c	/^int rfs_add_direntry(struct vinode *dir, const char *name, int inum) {$/;"	f
+rfs_alloc_block	kernel/rfs.c	/^int rfs_alloc_block(struct super_block *sb) {$/;"	f
+rfs_alloc_vinode	kernel/rfs.c	/^struct vinode *rfs_alloc_vinode(struct super_block *sb) {$/;"	f
+rfs_create	kernel/rfs.c	/^struct vinode *rfs_create(struct vinode *parent, struct dentry *sub_dentry) {$/;"	f
+rfs_device	kernel/ramdev.h	/^struct rfs_device {$/;"	s
+rfs_device_list	kernel/ramdev.c	/^struct rfs_device *rfs_device_list[MAX_RAMDISK_COUNT];$/;"	v	typeref:struct:rfs_device
+rfs_dinode	kernel/rfs.h	/^struct rfs_dinode {$/;"	s
+rfs_dir_cache	kernel/rfs.h	/^struct rfs_dir_cache {$/;"	s
+rfs_direntry	kernel/rfs.h	/^struct rfs_direntry {$/;"	s
+rfs_disk_stat	kernel/rfs.c	/^int rfs_disk_stat(struct vinode *vinode, struct istat *istat) {$/;"	f
+rfs_format_dev	kernel/rfs.c	/^int rfs_format_dev(struct device *dev) {$/;"	f
+rfs_free_block	kernel/rfs.c	/^int rfs_free_block(struct super_block *sb, int block_num) {$/;"	f
+rfs_get_superblock	kernel/rfs.c	/^struct super_block *rfs_get_superblock(struct device *dev) {$/;"	f
+rfs_hook_closedir	kernel/rfs.c	/^int rfs_hook_closedir(struct vinode *dir_vinode, struct dentry *dentry) {$/;"	f
+rfs_hook_opendir	kernel/rfs.c	/^int rfs_hook_opendir(struct vinode *dir_vinode, struct dentry *dentry) {$/;"	f
+rfs_i_ops	kernel/rfs.c	/^const struct vinode_ops rfs_i_ops = {$/;"	v	typeref:struct:vinode_ops
+rfs_link	kernel/rfs.c	/^int rfs_link(struct vinode *parent, struct dentry *sub_dentry, struct vinode *link_node) {$/;"	f
+rfs_lookup	kernel/rfs.c	/^struct vinode *rfs_lookup(struct vinode *parent, struct dentry *sub_dentry) {$/;"	f
+rfs_lseek	kernel/rfs.c	/^int rfs_lseek(struct vinode *f_inode, ssize_t new_offset, int whence, int *offset) {$/;"	f
+rfs_mkdir	kernel/rfs.c	/^struct vinode *rfs_mkdir(struct vinode *parent, struct dentry *sub_dentry) {$/;"	f
+rfs_r1block	kernel/rfs.c	/^int rfs_r1block(struct rfs_device *rfs_dev, int n_block) {$/;"	f
+rfs_read	kernel/rfs.c	/^ssize_t rfs_read(struct vinode *f_inode, char *r_buf, ssize_t len,$/;"	f
+rfs_read_dinode	kernel/rfs.c	/^struct rfs_dinode *rfs_read_dinode(struct rfs_device *rdev, int n_inode) {$/;"	f
+rfs_readdir	kernel/rfs.c	/^int rfs_readdir(struct vinode *dir_vinode, struct dir *dir, int *offset) {$/;"	f
+rfs_superblock	kernel/rfs.h	/^struct rfs_superblock {$/;"	s
+rfs_unlink	kernel/rfs.c	/^int rfs_unlink(struct vinode *parent, struct dentry *sub_dentry, struct vinode *unlink_vinode) {$/;"	f
+rfs_update_vinode	kernel/rfs.c	/^int rfs_update_vinode(struct vinode *vinode) {$/;"	f
+rfs_w1block	kernel/rfs.c	/^int rfs_w1block(struct rfs_device *rfs_dev, int n_block) {$/;"	f
+rfs_write	kernel/rfs.c	/^ssize_t rfs_write(struct vinode *f_inode, const char *w_buf, ssize_t len,$/;"	f
+rfs_write_back_vinode	kernel/rfs.c	/^int rfs_write_back_vinode(struct vinode *vinode) {$/;"	f
+rfs_write_dinode	kernel/rfs.c	/^int rfs_write_dinode(struct rfs_device *rdev, const struct rfs_dinode *dinode,$/;"	f
+riscv_regs	kernel/riscv.h	/^}riscv_regs;$/;"	t	typeref:struct:riscv_regs_t
+riscv_regs_t	kernel/riscv.h	/^typedef struct riscv_regs_t {$/;"	s
+rrsched	kernel/strap.c	/^void rrsched() {$/;"	f
+s0	kernel/riscv.h	/^  \/*  56 *\/ uint64 s0;$/;"	m	struct:riscv_regs_t
+s1	kernel/riscv.h	/^  \/*  64 *\/ uint64 s1;$/;"	m	struct:riscv_regs_t
+s10	kernel/riscv.h	/^  \/* 196 *\/ uint64 s10;$/;"	m	struct:riscv_regs_t
+s11	kernel/riscv.h	/^  \/* 208 *\/ uint64 s11;$/;"	m	struct:riscv_regs_t
+s2	kernel/riscv.h	/^  \/* 136 *\/ uint64 s2;$/;"	m	struct:riscv_regs_t
+s3	kernel/riscv.h	/^  \/* 144 *\/ uint64 s3;$/;"	m	struct:riscv_regs_t
+s4	kernel/riscv.h	/^  \/* 152 *\/ uint64 s4;$/;"	m	struct:riscv_regs_t
+s5	kernel/riscv.h	/^  \/* 160 *\/ uint64 s5;$/;"	m	struct:riscv_regs_t
+s6	kernel/riscv.h	/^  \/* 168 *\/ uint64 s6;$/;"	m	struct:riscv_regs_t
+s7	kernel/riscv.h	/^  \/* 176 *\/ uint64 s7;$/;"	m	struct:riscv_regs_t
+s8	kernel/riscv.h	/^  \/* 184 *\/ uint64 s8;$/;"	m	struct:riscv_regs_t
+s9	kernel/riscv.h	/^  \/* 192 *\/ uint64 s9;$/;"	m	struct:riscv_regs_t
+s_dev	kernel/vfs.h	/^  struct device *s_dev;   \/\/ device of the superblock$/;"	m	struct:super_block	typeref:struct:super_block::device
+s_fs_info	kernel/vfs.h	/^  void *s_fs_info;        \/\/ filesystem-specific info. for rfs, it points bitmap$/;"	m	struct:super_block
+s_root	kernel/vfs.h	/^  struct dentry *s_root;  \/\/ root dentry of inode$/;"	m	struct:super_block	typeref:struct:super_block::dentry
+s_start	kernel/kernel.c	/^int s_start(void) {$/;"	f
+safestrcpy	util/string.c	/^char* safestrcpy(char* s, const char* t, int n) {$/;"	f
+sb	kernel/vfs.h	/^  struct super_block *sb;          \/\/ super block of the vfs inode$/;"	m	struct:vinode	typeref:struct:vinode::super_block
+sb	kernel/vfs.h	/^  struct super_block *sb;$/;"	m	struct:dentry	typeref:struct:dentry::super_block
+sb	kernel/vfs.h	/^  struct super_block *sb;$/;"	m	struct:vinode_key	typeref:struct:vinode_key::super_block
+schedule	kernel/sched.c	/^void schedule() {$/;"	f
+seg_type	kernel/process.h	/^  uint32 seg_type; \/\/ segment type, one of the segment_types$/;"	m	struct:mapped_region
+segment_type	kernel/process.h	/^enum segment_type {$/;"	g
+set_csr	kernel/riscv.h	113;"	d
+shentsize	kernel/elf.h	/^  uint16 shentsize; \/* Section header table entry size *\/$/;"	m	struct:elf_header_t
+shnum	kernel/elf.h	/^  uint16 shnum;     \/* Section header table entry count *\/$/;"	m	struct:elf_header_t
+shoff	kernel/elf.h	/^  uint64 shoff;     \/* Section header table file offset *\/$/;"	m	struct:elf_header_t
+shstrndx	kernel/elf.h	/^  uint16 shstrndx;  \/* Section header string table index *\/$/;"	m	struct:elf_header_t
+shutdown	spike_interface/spike_utils.c	/^void shutdown(int code) {$/;"	f
+size	kernel/rfs.h	/^  int size;                      \/\/ size of the file (in bytes)$/;"	m	struct:rfs_dinode
+size	kernel/rfs.h	/^  int size;     \/\/ size of file system image (blocks)$/;"	m	struct:rfs_superblock
+size	kernel/vfs.h	/^  int size;                  \/\/ size of the file (in bytes)$/;"	m	struct:vinode
+size	kernel/vfs.h	/^  int size;               \/\/ size of file system image (blocks)$/;"	m	struct:super_block
+size	spike_interface/spike_file.h	/^  uint64 size;$/;"	m	struct:frontend_stat
+size_cells	spike_interface/dts_parse.h	/^  int size_cells;$/;"	m	struct:fdt_scan_node
+size_dt_strings	spike_interface/dts_parse.h	/^  uint32 size_dt_strings;$/;"	m	struct:fdt_header
+size_dt_struct	spike_interface/dts_parse.h	/^  uint32 size_dt_struct;$/;"	m	struct:fdt_header
+size_t	util/types.h	/^typedef unsigned long size_t;$/;"	t
+smode_trap_handler	kernel/strap.c	/^void smode_trap_handler(void) {$/;"	f
+smode_trap_vector	kernel/strap_vector.S	/^smode_trap_vector:$/;"	l
+sp	kernel/riscv.h	/^  \/*  8  *\/ uint64 sp;$/;"	m	struct:riscv_regs_t
+spike_fds	spike_interface/spike_file.c	/^static spike_file_t* spike_fds[MAX_FDS];$/;"	v	file:
+spike_file_close	spike_interface/spike_file.c	/^int spike_file_close(spike_file_t* f) {$/;"	f
+spike_file_decref	spike_interface/spike_file.c	/^void spike_file_decref(spike_file_t* f) {$/;"	f
+spike_file_dup	spike_interface/spike_file.c	/^int spike_file_dup(spike_file_t* f) {$/;"	f
+spike_file_get	spike_interface/spike_file.c	/^spike_file_t* spike_file_get(int fd) {$/;"	f
+spike_file_get_free	spike_interface/spike_file.c	/^static spike_file_t* spike_file_get_free(void) {$/;"	f	file:
+spike_file_incref	spike_interface/spike_file.c	/^void spike_file_incref(spike_file_t* f) {$/;"	f
+spike_file_init	spike_interface/spike_file.c	/^void spike_file_init(void) {$/;"	f
+spike_file_lseek	spike_interface/spike_file.c	/^ssize_t spike_file_lseek(spike_file_t* f, size_t ptr, int dir) {$/;"	f
+spike_file_open	spike_interface/spike_file.c	/^spike_file_t* spike_file_open(const char* fn, int flags, int mode) {$/;"	f
+spike_file_openat	spike_interface/spike_file.c	/^spike_file_t* spike_file_openat(int dirfd, const char* fn, int flags, int mode) {$/;"	f
+spike_file_pread	spike_interface/spike_file.c	/^ssize_t spike_file_pread(spike_file_t* f, void* buf, size_t size, off_t offset) {$/;"	f
+spike_file_read	spike_interface/spike_file.c	/^ssize_t spike_file_read(spike_file_t* f, void* buf, size_t size) {$/;"	f
+spike_file_stat	spike_interface/spike_file.c	/^int spike_file_stat(spike_file_t* f, struct stat* s) {$/;"	f
+spike_file_t	spike_interface/spike_file.h	/^} spike_file_t;$/;"	t	typeref:struct:file_t
+spike_file_write	spike_interface/spike_file.c	/^ssize_t spike_file_write(spike_file_t* f, const void* buf, size_t size) {$/;"	f
+spike_files	spike_interface/spike_file.c	/^spike_file_t spike_files[MAX_FILES] = {[0 ... MAX_FILES - 1] = {-1, 0}};$/;"	v
+spinlock_lock	spike_interface/atomic.h	/^static inline void spinlock_lock(spinlock_t* lock) {$/;"	f
+spinlock_lock_irqsave	spike_interface/atomic.h	/^static inline long spinlock_lock_irqsave(spinlock_t* lock) {$/;"	f
+spinlock_t	spike_interface/atomic.h	/^} spinlock_t;$/;"	t	typeref:struct:__anon2
+spinlock_trylock	spike_interface/atomic.h	/^static inline int spinlock_trylock(spinlock_t* lock) {$/;"	f
+spinlock_unlock	spike_interface/atomic.h	/^static inline void spinlock_unlock(spinlock_t* lock) {$/;"	f
+spinlock_unlock_irqrestore	spike_interface/atomic.h	/^static inline void spinlock_unlock_irqrestore(spinlock_t* lock, long flags) {$/;"	f
+sprint	spike_interface/spike_utils.c	/^void sprint(const char* s, ...) {$/;"	f
+ssize_t	util/types.h	/^typedef signed long ssize_t;$/;"	t
+st_blocks	util/types.h	/^  int st_blocks;$/;"	m	struct:istat
+st_inum	util/types.h	/^  int st_inum;$/;"	m	struct:istat
+st_nlinks	util/types.h	/^  int st_nlinks;$/;"	m	struct:istat
+st_size	util/types.h	/^  int st_size;$/;"	m	struct:istat
+st_type	util/types.h	/^  int st_type;$/;"	m	struct:istat
+stack0	kernel/machine/minit.c	/^__attribute__((aligned(16))) char stack0[4096 * NCPU];$/;"	v
+stat_u	user/user_lib.c	/^int stat_u(int fd, struct istat *istat) {$/;"	f
+status	kernel/process.h	/^  int status;$/;"	m	struct:process_t
+status	kernel/vfs.h	/^  int status;$/;"	m	struct:file
+stderr	spike_interface/spike_file.h	23;"	d
+stdin	spike_interface/spike_file.h	21;"	d
+stdout	spike_interface/spike_file.h	22;"	d
+strcat	util/string.c	/^char *strcat(char *dst, const char *src) {$/;"	f
+strchr	util/string.c	/^char *strchr(const char *p, int ch)$/;"	f
+strcmp	util/string.c	/^int strcmp(const char* s1, const char* s2) {$/;"	f
+strcpy	util/string.c	/^char* strcpy(char* dest, const char* src) {$/;"	f
+strlen	util/string.c	/^size_t strlen(const char* s) {$/;"	f
+strtok	util/string.c	/^char* strtok(char* str, const char* delim) {$/;"	f
+super_block	kernel/vfs.h	/^struct super_block {$/;"	s
+supports_extension	kernel/riscv.h	/^static inline int supports_extension(char ext) {$/;"	f
+swap_csr	kernel/riscv.h	106;"	d
+switch_to	kernel/process.c	/^void switch_to(process* proc) {$/;"	f
+sys_user_allocate_page	kernel/syscall.c	/^uint64 sys_user_allocate_page() {$/;"	f
+sys_user_close	kernel/syscall.c	/^ssize_t sys_user_close(int fd) {$/;"	f
+sys_user_closedir	kernel/syscall.c	/^ssize_t sys_user_closedir(int fd){$/;"	f
+sys_user_disk_stat	kernel/syscall.c	/^ssize_t sys_user_disk_stat(int fd, struct istat *istat) {$/;"	f
+sys_user_exit	kernel/syscall.c	/^ssize_t sys_user_exit(uint64 code) {$/;"	f
+sys_user_fork	kernel/syscall.c	/^ssize_t sys_user_fork() {$/;"	f
+sys_user_free_page	kernel/syscall.c	/^uint64 sys_user_free_page(uint64 va) {$/;"	f
+sys_user_link	kernel/syscall.c	/^ssize_t sys_user_link(char * vfn1, char * vfn2){$/;"	f
+sys_user_lseek	kernel/syscall.c	/^ssize_t sys_user_lseek(int fd, int offset, int whence) {$/;"	f
+sys_user_mkdir	kernel/syscall.c	/^ssize_t sys_user_mkdir(char * pathva){$/;"	f
+sys_user_open	kernel/syscall.c	/^ssize_t sys_user_open(char *pathva, int flags) {$/;"	f
+sys_user_opendir	kernel/syscall.c	/^ssize_t sys_user_opendir(char * pathva){$/;"	f
+sys_user_print	kernel/syscall.c	/^ssize_t sys_user_print(const char* buf, size_t n) {$/;"	f
+sys_user_read	kernel/syscall.c	/^ssize_t sys_user_read(int fd, char *bufva, uint64 count) {$/;"	f
+sys_user_readdir	kernel/syscall.c	/^ssize_t sys_user_readdir(int fd, struct dir *vdir){$/;"	f
+sys_user_stat	kernel/syscall.c	/^ssize_t sys_user_stat(int fd, struct istat *istat) {$/;"	f
+sys_user_unlink	kernel/syscall.c	/^ssize_t sys_user_unlink(char * vfn){$/;"	f
+sys_user_write	kernel/syscall.c	/^ssize_t sys_user_write(int fd, char *bufva, uint64 count) {$/;"	f
+sys_user_yield	kernel/syscall.c	/^ssize_t sys_user_yield() {$/;"	f
+t0	kernel/riscv.h	/^  \/*  32 *\/ uint64 t0;$/;"	m	struct:riscv_regs_t
+t1	kernel/riscv.h	/^  \/*  40 *\/ uint64 t1;$/;"	m	struct:riscv_regs_t
+t2	kernel/riscv.h	/^  \/*  48 *\/ uint64 t2;$/;"	m	struct:riscv_regs_t
+t3	kernel/riscv.h	/^  \/* 216 *\/ uint64 t3;$/;"	m	struct:riscv_regs_t
+t4	kernel/riscv.h	/^  \/* 224 *\/ uint64 t4;$/;"	m	struct:riscv_regs_t
+t5	kernel/riscv.h	/^  \/* 232 *\/ uint64 t5;$/;"	m	struct:riscv_regs_t
+t6	kernel/riscv.h	/^  \/* 240 *\/ uint64 t6;$/;"	m	struct:riscv_regs_t
+tick_count	kernel/process.h	/^  int tick_count;$/;"	m	struct:process_t
+timerinit	kernel/machine/minit.c	/^void timerinit(uintptr_t hartid) {$/;"	f
+tohost	spike_interface/spike_htif.c	/^volatile uint64_t tohost __attribute__((section(".htif")));$/;"	v
+total_mapped_region	kernel/process.h	/^  int total_mapped_region;$/;"	m	struct:process_t
+totalsize	spike_interface/dts_parse.h	/^  uint32 totalsize;$/;"	m	struct:fdt_header
+tp	kernel/riscv.h	/^  \/*  24 *\/ uint64 tp;$/;"	m	struct:riscv_regs_t
+trap_sec_start	kernel/strap_vector.S	/^trap_sec_start:$/;"	l
+trapframe	kernel/process.h	/^  trapframe* trapframe;$/;"	m	struct:process_t
+trapframe	kernel/process.h	/^}trapframe;$/;"	t	typeref:struct:trapframe_t
+trapframe_t	kernel/process.h	/^typedef struct trapframe_t {$/;"	s
+type	kernel/elf.h	/^  uint16 type;      \/* Object file type *\/$/;"	m	struct:elf_header_t
+type	kernel/elf.h	/^  uint32 type;   \/* Segment type *\/$/;"	m	struct:elf_prog_header_t
+type	kernel/rfs.h	/^  int type;                      \/\/ one of R_FREE, R_FILE, R_DIR$/;"	m	struct:rfs_dinode
+type	kernel/vfs.h	/^  int type;                  \/\/ one of FILE_I, DIR_I$/;"	m	struct:vinode
+type_num	kernel/vfs.h	/^  int type_num;  \/\/ the number of the file system type$/;"	m	struct:file_system_type
+uid	spike_interface/spike_file.h	/^  uint32 uid;$/;"	m	struct:frontend_stat
+uint16	util/types.h	/^typedef unsigned short uint16;$/;"	t
+uint32	util/types.h	/^typedef unsigned int uint32;$/;"	t
+uint64	util/types.h	/^typedef unsigned long long uint64;$/;"	t
+uint8	util/types.h	/^typedef unsigned char uint8;$/;"	t
+unlikely	util/functions.h	10;"	d
+unlink_u	user/user_lib.c	/^int unlink_u(const char *fn){$/;"	f
+user_va_to_pa	kernel/vmm.c	/^void *user_va_to_pa(pagetable_t page_dir, void *va) {$/;"	f
+user_vm_map	kernel/vmm.c	/^void user_vm_map(pagetable_t page_dir, uint64 va, uint64 size, uint64 pa, int perm) {$/;"	f
+user_vm_unmap	kernel/vmm.c	/^void user_vm_unmap(pagetable_t page_dir, uint64 va, uint64 size, int free) {$/;"	f
+va	kernel/process.h	/^  uint64 va;       \/\/ mapped virtual address$/;"	m	struct:mapped_region
+vaddr	kernel/elf.h	/^  uint64 vaddr;  \/* Segment virtual address *\/$/;"	m	struct:elf_prog_header_t
+value	spike_interface/dts_parse.h	/^  uint32 *value;$/;"	m	struct:fdt_scan_prop
+value	util/hash_table.h	/^  void *value;$/;"	m	struct:hash_node
+version	kernel/elf.h	/^  uint32 version;   \/* Object file version *\/$/;"	m	struct:elf_header_t
+version	spike_interface/dts_parse.h	/^  uint32 version;$/;"	m	struct:fdt_header
+vfs_close	kernel/vfs.c	/^int vfs_close(struct file *file) {$/;"	f
+vfs_closedir	kernel/vfs.c	/^int vfs_closedir(struct file *file) {$/;"	f
+vfs_dev_list	kernel/vfs.c	/^struct device *vfs_dev_list[MAX_VFS_DEV];     \/\/ system device list in vfs layer$/;"	v	typeref:struct:device
+vfs_disk_stat	kernel/vfs.c	/^int vfs_disk_stat(struct file *file, struct istat *istat) {$/;"	f
+vfs_init	kernel/vfs.c	/^int vfs_init() {$/;"	f
+vfs_link	kernel/vfs.c	/^int vfs_link(const char *oldpath, const char *newpath) {$/;"	f
+vfs_lseek	kernel/vfs.c	/^ssize_t vfs_lseek(struct file *file, ssize_t offset, int whence) {$/;"	f
+vfs_mkdir	kernel/vfs.c	/^int vfs_mkdir(const char *path) {$/;"	f
+vfs_mount	kernel/vfs.c	/^struct super_block *vfs_mount(const char *dev_name, int mnt_type) {$/;"	f
+vfs_open	kernel/vfs.c	/^struct file *vfs_open(const char *path, int flags) {$/;"	f
+vfs_opendir	kernel/vfs.c	/^struct file *vfs_opendir(const char *path) {$/;"	f
+vfs_read	kernel/vfs.c	/^ssize_t vfs_read(struct file *file, char *buf, size_t count) {$/;"	f
+vfs_readdir	kernel/vfs.c	/^int vfs_readdir(struct file *file, struct dir *dir) {$/;"	f
+vfs_root_dentry	kernel/vfs.c	/^struct dentry *vfs_root_dentry;               \/\/ system root direntry$/;"	v	typeref:struct:dentry
+vfs_sb_list	kernel/vfs.c	/^struct super_block *vfs_sb_list[MAX_MOUNTS];  \/\/ system superblock list$/;"	v	typeref:struct:super_block
+vfs_stat	kernel/vfs.c	/^int vfs_stat(struct file *file, struct istat *istat) {$/;"	f
+vfs_unlink	kernel/vfs.c	/^int vfs_unlink(const char *path) {$/;"	f
+vfs_write	kernel/vfs.c	/^ssize_t vfs_write(struct file *file, const char *buf, size_t count) {$/;"	f
+vinode	kernel/vfs.h	/^struct vinode {$/;"	s
+vinode_hash_equal	kernel/vfs.c	/^int vinode_hash_equal(void *key1, void *key2) {$/;"	f
+vinode_hash_func	kernel/vfs.c	/^size_t vinode_hash_func(void *key) {$/;"	f
+vinode_hash_table	kernel/vfs.c	/^struct hash_table vinode_hash_table;$/;"	v	typeref:struct:hash_table
+vinode_key	kernel/vfs.h	/^struct vinode_key {$/;"	s
+vinode_ops	kernel/vfs.h	/^struct vinode_ops {$/;"	s
+viop_create	kernel/vfs.h	/^  struct vinode *(*viop_create)(struct vinode *parent, struct dentry *sub_dentry);$/;"	m	struct:vinode_ops	typeref:struct:vinode_ops::viop_create
+viop_create	kernel/vfs.h	177;"	d
+viop_disk_stat	kernel/vfs.h	/^  int (*viop_disk_stat)(struct vinode *node, struct istat *istat);$/;"	m	struct:vinode_ops
+viop_disk_stat	kernel/vfs.h	179;"	d
+viop_hook_close	kernel/vfs.h	/^  int (*viop_hook_close)(struct vinode *node, struct dentry *dentry);$/;"	m	struct:vinode_ops
+viop_hook_closedir	kernel/vfs.h	/^  int (*viop_hook_closedir)(struct vinode *node, struct dentry *dentry);$/;"	m	struct:vinode_ops
+viop_hook_open	kernel/vfs.h	/^  int (*viop_hook_open)(struct vinode *node, struct dentry *dentry);$/;"	m	struct:vinode_ops
+viop_hook_opendir	kernel/vfs.h	/^  int (*viop_hook_opendir)(struct vinode *node, struct dentry *dentry);$/;"	m	struct:vinode_ops
+viop_link	kernel/vfs.h	/^  int (*viop_link)(struct vinode *parent, struct dentry *sub_dentry,$/;"	m	struct:vinode_ops
+viop_link	kernel/vfs.h	180;"	d
+viop_lookup	kernel/vfs.h	/^  struct vinode *(*viop_lookup)(struct vinode *parent,$/;"	m	struct:vinode_ops	typeref:struct:vinode_ops::viop_lookup
+viop_lookup	kernel/vfs.h	182;"	d
+viop_lseek	kernel/vfs.h	/^  int (*viop_lseek)(struct vinode *node, ssize_t new_off, int whence, int *off);$/;"	m	struct:vinode_ops
+viop_lseek	kernel/vfs.h	178;"	d
+viop_mkdir	kernel/vfs.h	/^  struct vinode *(*viop_mkdir)(struct vinode *parent, struct dentry *sub_dentry);$/;"	m	struct:vinode_ops	typeref:struct:vinode_ops::viop_mkdir
+viop_mkdir	kernel/vfs.h	184;"	d
+viop_read	kernel/vfs.h	/^  ssize_t (*viop_read)(struct vinode *node, char *buf, ssize_t len,$/;"	m	struct:vinode_ops
+viop_read	kernel/vfs.h	175;"	d
+viop_readdir	kernel/vfs.h	/^  int (*viop_readdir)(struct vinode *dir_vinode, struct dir *dir, int *offset);$/;"	m	struct:vinode_ops
+viop_readdir	kernel/vfs.h	183;"	d
+viop_unlink	kernel/vfs.h	/^  int (*viop_unlink)(struct vinode *parent, struct dentry *sub_dentry,$/;"	m	struct:vinode_ops
+viop_unlink	kernel/vfs.h	181;"	d
+viop_write	kernel/vfs.h	/^  ssize_t (*viop_write)(struct vinode *node, const char *buf, ssize_t len,$/;"	m	struct:vinode_ops
+viop_write	kernel/vfs.h	176;"	d
+viop_write_back_vinode	kernel/vfs.h	/^  int (*viop_write_back_vinode)(struct vinode *node);$/;"	m	struct:vinode_ops
+viop_write_back_vinode	kernel/vfs.h	185;"	d
+virtual_hash_equal	util/hash_table.h	/^  int (*virtual_hash_equal)(void *key1, void *key2);$/;"	m	struct:hash_table
+virtual_hash_erase	util/hash_table.h	/^  int (*virtual_hash_erase)(struct hash_table *hash_table, void *key);$/;"	m	struct:hash_table
+virtual_hash_func	util/hash_table.h	/^  size_t (*virtual_hash_func)(void *key);$/;"	m	struct:hash_table
+virtual_hash_get	util/hash_table.h	/^  void *(*virtual_hash_get)(struct hash_table *hash_table, void *key);$/;"	m	struct:hash_table
+virtual_hash_put	util/hash_table.h	/^  int (*virtual_hash_put)(struct hash_table *hash_table, void *key, void *value);$/;"	m	struct:hash_table
+vprintk	spike_interface/spike_utils.c	/^void vprintk(const char* s, va_list vl) {$/;"	f
+vprintm	spike_interface/spike_utils.c	/^void vprintm(const char* s, va_list vl) {$/;"	f
+vsnprintf	util/snprintf.c	/^int32 vsnprintf(char* out, size_t n, const char* s, va_list vl) {$/;"	f
+writable	kernel/vfs.h	/^  int writable;$/;"	m	struct:file
+write_csr	kernel/riscv.h	104;"	d
+write_tp	kernel/riscv.h	/^static inline void write_tp(uint64 x) { asm volatile("mv tp, %0" : : "r"(x)); }$/;"	f
+write_u	user/user_lib.c	/^int write_u(int fd, void *buf, uint64 count) {$/;"	f
+yield	user/user_lib.c	/^void yield() {$/;"	f
